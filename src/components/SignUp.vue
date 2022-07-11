@@ -313,7 +313,7 @@ export default {
       }
     },
     async saveUsers() {
-      const data = await UserApi.saveUser([
+      const data = await UserApi.signup([
         {
           fullName: this.name,
           phone: this.phone,

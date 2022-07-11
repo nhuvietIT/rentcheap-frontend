@@ -542,7 +542,8 @@ export default {
     signOut() {
       localStorageUtils.clearToken();
       localStorageUtils.clearCurrentUser();
-      this.$router.push('/rent').catch(() => {})
+      // this.$router('/').catch(() => {})
+      window.location.reload('/')
     },
   },
   created() {

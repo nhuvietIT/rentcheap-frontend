@@ -103,13 +103,14 @@ export default {
   created() {},
   methods: {
     async Signin() {
-      const data = await UserApi.signin([
-        { phone: this.phone, passWord: this.password },
-      ]);
+      const data = await UserApi.signin({
+        username: this.phone,
+        password: this.password,
+      });
 
       if (data.token) {
-        localStorage.getService().setToken(data.token); 
-        localStorage.getService().setCurrentUser(JSON.stringify(data.user))
+        localStorage.getService().setToken(data.token);
+        localStorage.getService().setCurrentUser(JSON.stringify(data.user));
         if (data.user.isRole === "rent")
           await this.$router.push({ name: "rent" }).catch(() => {});
         if (data.user.isRole === "sale")
@@ -144,7 +145,7 @@ i.v-icon.notranslate.mdi.mdi-checkbox-blank-outline.theme--light {
   color: rgb(119 131 197) !important;
 }
 </style>
- 
+
 <style scoped>
 .input-error::placeholder {
   color: red !important;
@@ -744,4 +745,3 @@ label.valid:after {
 
 /*# sourceMappingURL=style.css.map */
 </style>
- 
