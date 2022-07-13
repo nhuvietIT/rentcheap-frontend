@@ -42,7 +42,9 @@
                 />
               </div>
               <div class="form-group form-button">
-                <button class="form-submit" @click="Signin">Đăng nhập</button>
+                <button class="form-submit" @click="checkSignin">
+                  Đăng nhập
+                </button>
               </div>
             </div>
             <!-- <div class="social-login"> -->
@@ -92,6 +94,7 @@ export default {
       phone: "",
       address: "",
       password: "",
+      errorPhone: "",
       isError: false,
       errorPassword: "",
       timeout: 6000,
@@ -102,21 +105,65 @@ export default {
   },
   created() {},
   methods: {
+    isEmpty(str) {
+      return str.replace(/^\s+|\s+$/g, "");
+    },
     async Signin() {
-      const data = await UserApi.signin({
-        username: this.phone,
-        password: this.password,
-      });
+      try {
+        const data = await UserApi.signin({
+          username: this.phone,
+          password: this.password,
+        });
+        if (data.token) {
+          localStorage.getService().setToken(data.token);
+          localStorage.getService().setCurrentUser(JSON.stringify(data.user));
+          if (data.user.isRole === "rent") window.location.replace("/rent");
+          if (data.user.isRole === "sale") window.location.replace("/sale");
+          if (data.user.isRole === "admin") window.location.replace("/sale");
+        }
 
-      if (data.token) {
-        localStorage.getService().setToken(data.token);
-        localStorage.getService().setCurrentUser(JSON.stringify(data.user));
-        if (data.user.isRole === "rent")
-          await this.$router.push({ name: "rent" }).catch(() => {});
-        if (data.user.isRole === "sale")
-          await this.$router.push({ name: "sale" }).catch(() => {});
+      } catch (error) {
+        if (error.response.data.isError === "pass") {
+          this.snackbar = true;
+          this.textSnackbar = error.response.data.message;
+          this.colorSnackbar = "rgb(253 146 156)";
+        } else {
+          this.snackbar = true;
+          this.textSnackbar = error.response.data.message;
+          this.colorSnackbar = "rgb(253 146 156)";
+        }
+      }
+    },
+    checkSignin() {
+      this.isError = true;
+      if (
+        !this.regexPhoneNumber(this.phone) ||
+        this.isEmpty(this.phone) == ""
+      ) {
+        this.errorPhone =
+          this.isEmpty(this.phone) != ""
+            ? "Số điện thoại không chính xác !"
+            : "Vui lòng nhập số điện thoại";
+        this.phone = "";
+      }
+      if (this.isEmpty(this.password) == "") {
+        this.errorPassword = "Vui lòng nhập mật khẩu";
+        this.password = "";
+      }
+      if (
+        this.regexPhoneNumber(this.phone) &&
+        this.isEmpty(this.password) != ""
+      ) {
+        this.Signin();
+      }
+    },
+
+    regexPhoneNumber(str) {
+      const regexPhoneNumber = /^((\+)33|0)[1-9](\d{2}){4}$/;
+      if (str.match(regexPhoneNumber)) {
+        return true;
       } else {
-        console.log("lỗi", data.message);
+        return false;
       }
     },
 

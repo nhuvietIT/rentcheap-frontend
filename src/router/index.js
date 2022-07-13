@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueRouter from 'vue-router'; 
+import VueRouter from 'vue-router';
 if (!process || process.env.NODE_ENV !== 'test') {
   Vue.use(VueRouter);
 }
@@ -11,25 +11,31 @@ const routes = [
     name: 'home',
     meta: { title: 'Rent Cheap' },
     component: () => import('@/views/Home/HomeRent'),
-  }, 
+  },
   {
     path: '/rent',
     name: 'rent',
     meta: { title: 'Rent information' },
     component: () => import('@/views/Rent/InforRent'),
-  }, 
+  },
   {
     path: '/sale',
     name: 'sale',
     meta: { title: 'Sale information' },
     component: () => import('@/views/Sale/InforSale'),
-  }, 
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    meta: { title: 'admin' },
+    component: () => import('@/views/Sale/InforSale'),
+  },
   {
     path: '/map',
     name: 'map',
     meta: { title: 'Sale information' },
     component: () => import('@/views/TestLocationMap'),
-  }, 
+  },
 ];
 
 const router = new VueRouter({

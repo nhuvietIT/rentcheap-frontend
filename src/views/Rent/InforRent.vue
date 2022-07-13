@@ -64,6 +64,46 @@
 
     <!-- ***** Header Area End ***** -->
 
+    <div id="rentandsale" class="services section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 offset-lg-2">
+            <div
+              class="section-heading wow fadeInDown"
+              data-wow-duration="1s"
+              data-wow-delay="0.5s"
+            >
+              <h4><em>Quản lý </em></h4>
+              <img src="@/assets/images/heading-line-dec.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div
+          class="section-heading wow fadeInDown"
+          data-wow-duration="1s"
+          data-wow-delay="0.5s"
+        >
+          <!-- <p>
+            Hợp đồng thuê tài sản là sự thỏa thuận giữa các bên, theo đó bên cho
+            thuê giao tài sản cho bên thuê để sử dụng trong một thời hạn, bên
+            thuê phải trả tiền thuê.
+          </p> -->
+          <!-- <img src="@/assets/images/heading-line-dec.png" alt="" /> -->
+          <!-- <li class="scroll-to-section gradient-button">
+            <a id="modal_trigger" @click="testAPI"><i></i>Test API</a>
+          </li> -->
+        </div>
+        <!-- <UserLocationRent /> -->
+      </div>
+
+      <div class="container">
+        <div class="row"></div>
+      </div>
+    </div>
+
     <footer id="newsletter">
       <div class="container">
         <div class="row">
@@ -157,6 +197,8 @@ import "@/assets/css/templatemo-chain-app-dev.css";
 import "@/assets/css/animated.css";
 import "@/assets/css/owl.css";
 import localStorageUtils from "@/utils/utils_local_storage";
+// import UserApi from "@/api/userApi.js";
+
 export default {
   name: "information-rent",
   data: () => ({
@@ -226,8 +268,18 @@ export default {
     signOut() {
       localStorageUtils.clearToken();
       localStorageUtils.clearCurrentUser();
-      this.$router.push("/").catch(() => {}); 
+      window.location.replace("/");
     },
+    // async testAPI() {
+    //   try {
+    //     const data = await UserApi.showUser();
+    //     console.log("DATA Rent", data);
+    //   } catch (error) {
+    //     if (error.response.data.statusCode === 403) {
+    //       console.log("DATA error", "Bạn không có quyền truy cập");
+    //     }
+    //   }
+    // },
   },
   created() {},
   mounted() {

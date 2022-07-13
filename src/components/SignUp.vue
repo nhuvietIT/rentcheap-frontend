@@ -195,6 +195,11 @@
         </div>
       </div>
     </section> -->
+    <v-dialog v-model="dialog" width="auto">
+      <v-card>
+        <SignUpSuccess />
+      </v-card>
+    </v-dialog>
     <v-snackbar
       v-model="snackbar"
       :timeout="timeout"
@@ -207,8 +212,10 @@
 </template>
 
 <script>
-import UserApi from "@/api/userApi.js";
+// import UserApi from "@/api/userApi.js";
+import SignUpSuccess from "../components/SignUpSuccess.vue";
 export default {
+  components: { SignUpSuccess },
   data() {
     return {
       name: "",
@@ -228,8 +235,9 @@ export default {
       isError: false,
       snackbar: false,
       textSnackbar: "",
-      timeout: 6000,
+      timeout: 10000,
       colorSnackbar: "",
+      dialog: false,
     };
   },
   created() {},
@@ -238,6 +246,7 @@ export default {
       return str.replace(/^\s+|\s+$/g, "");
     },
     async checkInfor() {
+      this.saveUsers();
       this.isError = true;
       this.errorIsRole = true;
 
@@ -313,19 +322,30 @@ export default {
       }
     },
     async saveUsers() {
-      const data = await UserApi.signup([
-        {
-          fullName: this.name,
-          phone: this.phone,
-          email: this.email,
-          address: this.address,
-          isRole: this.isRole,
-          passWord: this.re_password,
-        },
-      ]);
-      this.snackbar = true;
-      this.textSnackbar = data.message;
-      this.colorSnackbar = data.token ? "rgb(52 153 15)" : "rgb(255 180 30)";
+      // const data = await UserApi.signup([
+      //   {
+      //     fullName: this.name,
+      //     phone: this.phone,
+      //     email: this.email,
+      //     address: this.address,
+      //     isRole: this.isRole,
+      //     passWord: this.re_password,
+      //   },
+      // ]);
+      // this.snackbar = true;
+      // this.textSnackbar = data.message;
+      // this.colorSnackbar = data.token ? "rgb(52 153 15)" : "rgb(255 180 30)";
+      // if (data.token) {
+      // localStorage.getService().setToken(data.token);
+      // localStorage.getService().setCurrentUser(JSON.stringify(data.user));
+      // if (data.user.isRole === "rent")
+      //   this.$router.push("/rent").catch(() => {});
+      // if (data.user.isRole === "sale")
+      //   this.$router.push("/sale").catch(() => {});
+      // if (data.user.isRole === "admin")
+      //   this.$router.push("/admin").catch(() => {});
+      this.openDialog();
+      // }
     },
     checkError() {
       this.isError = false;
@@ -346,6 +366,23 @@ export default {
     IsNumber(event) {
       if (!/\d/.test(event.key) && event.key !== ".")
         return event.preventDefault();
+    },
+    openDialog() {
+      this.dialog = true;
+      this.myMenu();
+    },
+    closeDialog() {
+      this.dialog = false;
+    },
+    myMenu() {
+      var x = document.getElementById("myLinks");
+      if (x.style.display === "block") {
+        x.style.display = "none";
+        this.checkMenu = true;
+      } else {
+        x.style.display = "block";
+        this.checkMenu = false;
+      }
     },
   },
 };
