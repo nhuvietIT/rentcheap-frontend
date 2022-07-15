@@ -196,9 +196,9 @@
       </div>
     </section> -->
     <v-dialog v-model="dialog" width="auto">
-      <v-card>
+      <!-- <v-card > -->
         <SignUpSuccess />
-      </v-card>
+      <!-- </v-card> -->
     </v-dialog>
     <v-snackbar
       v-model="snackbar"
@@ -399,6 +399,9 @@ i.v-icon.notranslate.mdi.mdi-checkbox-blank-outline.theme--light {
 .v-label {
   font-size: 14px !important;
   color: rgb(119 131 197) !important;
+}
+.v-dialog:not(.v-dialog--fullscreen) { 
+  border-radius: 15px ;
 }
 </style>
 
