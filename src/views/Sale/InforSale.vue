@@ -16,8 +16,10 @@
       <v-navigation-drawer
         v-model="drawer"
         :mini-variant.sync="mini"
+        absolute
         permanent
-        style="z-index: 1"
+        right
+        style="z-index: 3"
         ref="drawer"
         width="280"
         height="100vh"
