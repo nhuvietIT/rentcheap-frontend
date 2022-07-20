@@ -23,6 +23,8 @@
         ref="drawer"
         width="280"
         height="100vh"
+        src="../../assets/images/drawer.png"
+        dark
       >
         <v-list-item class="px-2">
           <v-list-item-avatar>
