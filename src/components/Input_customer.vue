@@ -3,19 +3,54 @@
     <div id="rentandsale" class="services section">
       <div class="container">
         <div class="row">
-          <div class="col-lg-8 offset-lg-2">
+          <div class="infor-customer">
             <div
               class="section-heading wow fadeInDown"
               data-wow-duration="1s"
               data-wow-delay="0.5s"
             >
-              <h4><em>Quản lý </em></h4>
+              <h4 class="infor-customer-mobile">
+                <em>Danh sách khách hàng </em>
+              </h4>
               <img src="@/assets/images/heading-line-dec.png" alt="" />
             </div>
+            <v-data-table
+              :headers="headers"
+              :items="listCustomer"
+              class="elevation-1" 
+              disable-sort
+            >
+              <template v-slot:[`item.actions`]="{ item }">
+                <v-icon color="red" @click="deleteItem(item)">
+                  mdi-delete
+                </v-icon>
+              </template>
+              <template v-slot:[`item.isApproved`]="{ item }">
+                <v-chip
+                  :text-color="getColor(item.isApproved)"
+                  class="is-approved"
+                >
+                  {{ item.isApproved }}
+                </v-chip>
+              </template>
+            </v-data-table>
           </div>
         </div>
       </div>
     </div>
+    <v-dialog v-model="dialogDelete" max-width="500px">
+      <v-card>
+        <v-card-title class="text-h5">Bạn có muốn xóa người này ?</v-card-title>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+          <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+            >OK</v-btn
+          >
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -25,14 +60,67 @@ import "@/assets/css/templatemo-chain-app-dev.css";
 import "@/assets/css/animated.css";
 import "@/assets/css/owl.css";
 
-// import UserApi from "@/api/userApi.js";
-
 export default {
   name: "information-rent",
-  data: () => ({}),
-  methods: {},
-  created() {},
+  props: {
+    dataCustomer: Array,
+  },
+  data: () => ({
+    headers: [
+      {
+        text: "Tên khách hàng",
+        align: "start",
+        sortable: false,
+        value: "nameCustomer",
+      },
+      { text: "Số điện thoại", value: "phoneCustomer" },
+      { text: "Địa chỉ", value: "addressCustomer" },
+      { text: "Phê duyệt", value: "isApproved" },
+      { text: "Xóa KH", value: "actions", sortable: false },
+    ],
+    dialog: false,
+    dialogDelete: false,
+  }),
+  async created() {},
   mounted() {},
+  computed: {
+    listCustomer() {
+      const dataCustomer = this.dataCustomer.map(
+        ({ nameCustomer, phoneCustomer, addressCustomer, isApproved }) => ({
+          nameCustomer: nameCustomer,
+          phoneCustomer: phoneCustomer,
+          addressCustomer: addressCustomer,
+          isApproved:
+            isApproved === "waiting"
+              ? "Đang chờ đợi"
+              : "" || isApproved === "requesting"
+              ? "Đang gửi yêu cầu"
+              : "" || isApproved === "successful"
+              ? "Bạn đã giới thiệu thành công"
+              : "",
+        })
+      );
+      return dataCustomer;
+    },
+  },
+  methods: {
+    getColor(isApproved) {
+      if (isApproved == "Đang chờ đợi") return "red";
+      if (isApproved == "Đang gửi yêu cầu") return "rgb(255 142 0)";
+      if (isApproved == "Bạn đã giới thiệu thành công") return "rgb(76 175 80)";
+    },
+    deleteItem(item) {
+      console.log("AAA", item);
+      this.dialogDelete = true;
+    },
+    deleteItemConfirm() {
+      console.log("BBB");
+      this.closeDelete();
+    },
+    closeDelete() {
+      this.dialogDelete = false;
+    },
+  },
 };
 </script>
 
@@ -119,6 +207,18 @@ export default {
   background-color: #ddd;
   color: black;
 }
+
+.is-approved {
+  background: none !important;
+  font-weight: 500;
+}
+
+.infor-customer {
+  z-index: 2;
+}
+.services {
+  padding-top: 121px !important;
+}
 /* @media (min-width: 992px) {
   .col-lg-6 {
     flex: 0 0 auto;
@@ -129,4 +229,12 @@ export default {
     opacity: 0.1;
   }
 } */
+@media screen and (max-width: 768px) {
+  .services {
+    padding-top: 39px !important;
+  }
+  .infor-customer-mobile {
+    font-size: 26px;
+  }
+}
 </style>
