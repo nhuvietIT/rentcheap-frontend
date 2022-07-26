@@ -25,6 +25,7 @@
         height="100vh"
         src="../../assets/images/drawer.png"
         dark
+        mini-variant-width="52" 
       >
         <v-list-item class="px-2">
           <v-list-item-avatar>
@@ -60,10 +61,14 @@
 
       <v-main>
         <div v-if="numberTab == 1">
-          <InputCustomer />
+          <InputCustomer :dataCustomer="dataCustomer" />
         </div>
-        <h1 v-if="numberTab == 2">My wallet</h1>
-        <h1 v-if="numberTab == 3">User</h1>
+        <div v-if="numberTab == 2" style="background: red">
+          <InputCustomer :dataCustomer="dataCustomer" />
+        </div>
+        <div v-if="numberTab == 3" style="background: yellow">
+          <InputCustomer :dataCustomer="dataCustomer" />
+        </div>
       </v-main>
     </v-layout>
   </div>
@@ -75,7 +80,7 @@ import "@/assets/css/templatemo-chain-app-dev.css";
 import "@/assets/css/animated.css";
 import "@/assets/css/owl.css";
 import localStorageUtils from "@/utils/utils_local_storage";
-// import UserApi from "@/api/userApi.js";
+import CustomerApi from "@/api/customerApi.js";
 import InputCustomer from "../../components/Input_customer.vue";
 export default {
   name: "information-sale",
@@ -95,6 +100,7 @@ export default {
     mini: true,
     numberTab: "",
     setHeight: "",
+    dataCustomer: [],
   }),
   provide() {
     return {
@@ -119,8 +125,10 @@ export default {
       }
     },
   },
-  created() {
+  async created() {
     this.numberTab = 1;
+    const data = await CustomerApi.showCustomer();
+    this.dataCustomer = data[0].Customer;
   },
   mounted() {
     setTimeout(() => {
@@ -148,6 +156,9 @@ export default {
 </script>
 
 <style scoped>
+v-main {
+  width: 200px;
+}
 .v-tour__target--highlighted {
   box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.4);
 }
