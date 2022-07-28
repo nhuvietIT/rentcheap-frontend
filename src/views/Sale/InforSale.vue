@@ -1,5 +1,5 @@
 <template>
-  <div ref="infoBox">
+  <div>
     <!-- ***** Preloader Start ***** -->
     <!-- <div id="js-preloader" class="js-preloader" v-if="isLoading">
       <div class="preloader-inner">
@@ -12,7 +12,7 @@
       </div>
     </div> -->
 
-    <v-layout>
+    <v-layout v-if="!isDevice">
       <v-navigation-drawer
         v-model="drawer"
         :mini-variant.sync="mini"
@@ -25,7 +25,7 @@
         height="100vh"
         src="../../assets/images/drawer.png"
         dark
-        mini-variant-width="52" 
+        mini-variant-width="52"
       >
         <v-list-item class="px-2">
           <v-list-item-avatar>
@@ -38,9 +38,7 @@
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
         </v-list-item>
-
         <v-divider></v-divider>
-
         <v-list dense :style="setHeight">
           <v-list-item
             v-for="item in items"
@@ -58,7 +56,6 @@
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
-
       <v-main>
         <div v-if="numberTab == 1">
           <InputCustomer :dataCustomer="dataCustomer" />
@@ -71,6 +68,46 @@
         </div>
       </v-main>
     </v-layout>
+
+    <div v-else>
+      <v-app-bar color="rgb(75 142 241)">
+        <v-toolbar-title style="color: white">{{
+          items[numberTab - 1].titlePage
+        }}</v-toolbar-title>
+      </v-app-bar>
+      <v-app-bar app bottom class="bottomappbar">
+        <v-bottom-navigation
+          :value="value"
+          color="rgb(75 142 241)"
+          grow
+          class="elevation-0"
+          background-color="#ffffff"
+        >
+          <v-btn
+            v-for="(item, index) in items"
+            :key="index"
+            @click="clickTaMobile(item.tab)"
+          >
+            <!-- <span>{{item.title}}</span> -->
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-btn>
+        </v-bottom-navigation>
+      </v-app-bar>
+
+      <v-main>
+        <v-container fluid>
+          <div v-if="numberTab == 1">
+            <InputCustomer :dataCustomer="dataCustomer" />
+          </div>
+          <div v-if="numberTab == 2" style="background: red">
+            <InputCustomer :dataCustomer="dataCustomer" />
+          </div>
+          <div v-if="numberTab == 3">
+            <UserLocationRent />
+          </div>
+        </v-container>
+      </v-main>
+    </div>
   </div>
 </template>
 
@@ -82,9 +119,10 @@ import "@/assets/css/owl.css";
 import localStorageUtils from "@/utils/utils_local_storage";
 import CustomerApi from "@/api/customerApi.js";
 import InputCustomer from "../../components/Input_customer.vue";
+import UserLocationRent from "../../components/UserLocation_Rent.vue";
 export default {
   name: "information-sale",
-  components: { InputCustomer },
+  components: { InputCustomer, UserLocationRent },
   data: () => ({
     dialog: false,
     isLoading: true,
@@ -92,15 +130,32 @@ export default {
     drawer: true,
     items: [
       // { tab: 4, title: "Trang chủ", icon: "mdi-home-city" },
-      { tab: 1, title: "Danh sách khách hàng", icon: "fas fa-list" },
-      { tab: 2, title: "Ví", icon: "mdi-wallet" },
-      { tab: 3, title: "Users", icon: "mdi-account-group-outline" },
+      {
+        tab: 1,
+        title: "Danh sách",
+        icon: "fas fa-list",
+        titlePage: "Danh sách khách hàng",
+      },
+      {
+        tab: 2,
+        title: "Ví",
+        icon: "mdi-wallet",
+        titlePage: "Ví của tôi",
+      },
+      {
+        tab: 3,
+        title: "Users",
+        icon: "mdi-account-group-outline",
+        titlePage: "Thông tin",
+      },
       { tab: 4, title: "Đăng xuất", icon: "mdi-logout" },
     ],
     mini: true,
     numberTab: "",
     setHeight: "",
     dataCustomer: [],
+    value: 0,
+    isDevice: false,
   }),
   provide() {
     return {
@@ -124,8 +179,23 @@ export default {
         this.mini = true;
       }
     },
+    clickTaMobile(numberTab) {
+      window.scrollTo(0, 0);
+      if (numberTab == 4) this.signOut();
+      this.numberTab = numberTab;
+      this.mini = true;
+    },
   },
   async created() {
+    let details = navigator.userAgent;
+    let regexp = /android|iphone|kindle|ipad/i;
+    let isMobileDevice = regexp.test(details);
+    if (isMobileDevice) {
+      this.isDevice = true;
+    } else {
+      this.isDevice = false;
+    }
+
     this.numberTab = 1;
     const data = await CustomerApi.showCustomer();
     this.dataCustomer = data[0].Customer;
@@ -152,12 +222,32 @@ export default {
     //   this.$tours["myTour"].start();
     // }, 4000);
   },
+  computed: {
+    color() {
+      switch (this.value) {
+        case 0:
+          return "blue-grey";
+        case 1:
+          return "teal";
+        case 2:
+          return "brown";
+        case 3:
+          return "indigo";
+        default:
+          return "blue-grey";
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
 v-main {
   width: 200px;
+}
+.overStroll {
+  top: initial !important;
+  bottom: 0 !important;
 }
 .v-tour__target--highlighted {
   box-shadow: 0 0 0 99999px rgba(0, 0, 0, 0.4);
@@ -241,6 +331,10 @@ v-main {
   background-color: #ddd;
   color: black;
 }
+
+.v-btn:not(.v-btn--round).v-size--default {
+  height: 55px;
+}
 /* @media (min-width: 992px) {
   .col-lg-6 {
     flex: 0 0 auto;
@@ -251,4 +345,29 @@ v-main {
     opacity: 0.1;
   }
 } */
+
+.bottomappbar >>> .v-toolbar__content {
+  padding: 0;
+  margin: 0;
+}
+
+.v-app-bar >>> .v-app-bar--fixed {
+  top: initial !important;
+  bottom: 0 !important;
+}
+
+.v-app-bar.v-app-bar--fixed {
+  top: initial !important;
+  bottom: 0 !important;
+}
+
+.v-app-bar--fixed {
+  top: initial !important;
+  bottom: 0 !important;
+}
+
+.v-app-bar {
+  top: initial !important;
+  bottom: 0 !important;
+}
 </style>

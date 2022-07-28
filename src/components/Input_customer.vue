@@ -17,7 +17,7 @@
             <v-data-table
               :headers="headers"
               :items="listCustomer"
-              class="elevation-1" 
+              class="elevation-1"
               disable-sort
             >
               <template v-slot:[`item.actions`]="{ item }">
@@ -38,6 +38,7 @@
         </div>
       </div>
     </div>
+
     <v-dialog v-model="dialogDelete" max-width="500px">
       <v-card>
         <v-card-title class="text-h5">Bạn có muốn xóa người này ?</v-card-title>
@@ -218,6 +219,9 @@ export default {
 }
 .services {
   padding-top: 121px !important;
+}
+.services:after {
+  height: 0px;
 }
 /* @media (min-width: 992px) {
   .col-lg-6 {
