@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="rentandsale" class="services section">
+    <div id="rentandsale" :class="!isDevice ? 'services section' : 'section'">
       <div class="container">
         <div class="row">
           <div class="infor-customer">
@@ -8,6 +8,7 @@
               class="section-heading wow fadeInDown"
               data-wow-duration="1s"
               data-wow-delay="0.5s"
+              v-if="!isDevice"
             >
               <h4 class="infor-customer-mobile">
                 <em>Danh sách khách hàng </em>
@@ -17,7 +18,7 @@
             <v-data-table
               :headers="headers"
               :items="listCustomer"
-              class="elevation-1" 
+              class="elevation-1"
               disable-sort
             >
               <template v-slot:[`item.actions`]="{ item }">
@@ -33,18 +34,26 @@
                   {{ item.isApproved }}
                 </v-chip>
               </template>
+              <template v-slot:[`item.addressCustomer`]="{ item }">
+                <div :class="!isDevice ? '' : 'cut-address'">
+                  {{ item.addressCustomer }}
+                </div>
+              </template>
             </v-data-table>
           </div>
         </div>
       </div>
     </div>
-    <v-dialog v-model="dialogDelete" max-width="500px">
+
+    <v-dialog v-model="dialogDelete" max-width="352">
       <v-card>
-        <v-card-title class="text-h5">Bạn có muốn xóa người này ?</v-card-title>
+        <v-card-title class="text-h6">Bạn có muốn xóa người này ?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
-          <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+          <v-btn color="green   darken-1" text @click="closeDelete"
+            >Cancel</v-btn
+          >
+          <v-btn color="green  darken-1" text @click="deleteItemConfirm"
             >OK</v-btn
           >
           <v-spacer></v-spacer>
@@ -64,6 +73,7 @@ export default {
   name: "information-rent",
   props: {
     dataCustomer: Array,
+    isDevice: Boolean,
   },
   data: () => ({
     headers: [
@@ -85,6 +95,8 @@ export default {
   mounted() {},
   computed: {
     listCustomer() {
+      // const str = "JavaScript";
+      // const newStr = str.replace("ava", "-");
       const dataCustomer = this.dataCustomer.map(
         ({ nameCustomer, phoneCustomer, addressCustomer, isApproved }) => ({
           nameCustomer: nameCustomer,
@@ -211,6 +223,7 @@ export default {
 .is-approved {
   background: none !important;
   font-weight: 500;
+  padding: 0;
 }
 
 .infor-customer {
@@ -218,6 +231,9 @@ export default {
 }
 .services {
   padding-top: 121px !important;
+}
+.services:after {
+  height: 0px;
 }
 /* @media (min-width: 992px) {
   .col-lg-6 {
@@ -229,6 +245,11 @@ export default {
     opacity: 0.1;
   }
 } */
+.cut-address {
+  width: 192px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 @media screen and (max-width: 768px) {
   .services {
     padding-top: 39px !important;
