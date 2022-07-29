@@ -121,7 +121,6 @@ export default {
           if (data.user.isRole === "sale") window.location.replace("/sale");
           if (data.user.isRole === "admin") window.location.replace("/sale");
         }
-
       } catch (error) {
         if (error.response.data.isError === "pass") {
           this.snackbar = true;

@@ -214,14 +214,7 @@
             <div class="row">
               <div class="col-lg-6 align-self-center">
                 <div
-                  class="
-                    left-content
-                    show-up
-                    header-text
-                    wow
-                    fadeInLeft
-                    slide-signup
-                  "
+                  class="left-content show-up header-text wow fadeInLeft slide-signup"
                   data-wow-duration="1s"
                   data-wow-delay="1s"
                 >
@@ -543,7 +536,7 @@ export default {
       localStorageUtils.clearToken();
       localStorageUtils.clearCurrentUser();
       // this.$router('/').catch(() => {})
-      window.location.reload('/')
+      window.location.reload("/");
     },
   },
   created() {

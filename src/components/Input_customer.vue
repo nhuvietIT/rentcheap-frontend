@@ -21,6 +21,14 @@
               class="elevation-1"
               disable-sort
             >
+              <template v-slot:[`header.actions`]="{}">
+                <v-btn icon @click="openAdd">
+                  <v-icon size="39" color="rgb(67 161 243)"
+                    >mdi-plus-box</v-icon
+                  >
+                  &nbsp;&nbsp;
+                </v-btn>
+              </template>
               <template v-slot:[`item.actions`]="{ item }">
                 <v-icon color="red" @click="deleteItem(item)">
                   mdi-delete
@@ -45,17 +53,13 @@
       </div>
     </div>
 
-    <v-dialog v-model="dialogDelete" max-width="352">
+    <v-dialog v-model="dialogDelete" max-width="379">
       <v-card>
         <v-card-title class="text-h6">Bạn có muốn xóa người này ?</v-card-title>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="green   darken-1" text @click="closeDelete"
-            >Cancel</v-btn
-          >
-          <v-btn color="green  darken-1" text @click="deleteItemConfirm"
-            >OK</v-btn
-          >
+          <v-btn color="success" text @click="closeDelete">Không</v-btn>
+          <v-btn color="success" text @click="deleteItemConfirm">Có</v-btn>
           <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
@@ -75,6 +79,7 @@ export default {
     dataCustomer: Array,
     isDevice: Boolean,
   },
+  inject: ["openAdd"],
   data: () => ({
     headers: [
       {
@@ -109,6 +114,8 @@ export default {
               ? "Đang gửi yêu cầu"
               : "" || isApproved === "successful"
               ? "Bạn đã giới thiệu thành công"
+              : "" || isApproved === "cancel"
+              ? "Đã hủy yêu cầu"
               : "",
         })
       );
@@ -120,6 +127,7 @@ export default {
       if (isApproved == "Đang chờ đợi") return "red";
       if (isApproved == "Đang gửi yêu cầu") return "rgb(255 142 0)";
       if (isApproved == "Bạn đã giới thiệu thành công") return "rgb(76 175 80)";
+      if (isApproved == "Đã hủy yêu cầu") return "rgb(132 29 148)";
     },
     deleteItem(item) {
       console.log("AAA", item);
@@ -135,6 +143,11 @@ export default {
   },
 };
 </script>
+<style>
+.v-data-table > .v-data-table__wrapper > table > thead > tr > th {
+  font-size: 0.9rem !important;
+}
+</style>
 
 <style scoped>
 .v-tour__target--highlighted {
@@ -250,6 +263,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 @media screen and (max-width: 768px) {
   .services {
     padding-top: 39px !important;

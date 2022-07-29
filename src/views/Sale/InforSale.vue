@@ -12,6 +12,12 @@
       </div>
     </div> -->
 
+    <!-- <v-btn icon absolute top right style="margin: 50px">
+      <div class="btn-create">
+        <v-icon size="52" color="rgb(67 161 243)">mdi-plus-box</v-icon>
+      </div>
+    </v-btn> -->
+
     <v-layout v-if="!isDevice">
       <v-navigation-drawer
         v-model="drawer"
@@ -74,11 +80,18 @@
 
     <div v-else>
       <v-app-bar color="rgb(75 142 241)">
-        <v-icon size="20" color="white">{{ items[numberTab - 1].icon }}</v-icon>
+        <v-icon size="18" color="white">{{ items[numberTab - 1].icon }}</v-icon>
         &nbsp; &nbsp;
         <v-toolbar-title style="color: white">{{
           items[numberTab - 1].titlePage
         }}</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="openAdd" fab>
+          <v-icon size="39" color="white"> mdi-plus</v-icon>
+        </v-btn>
+        <!-- <v-btn class="mx-2" size="39" fab dark color="indigo">
+          <v-icon dark> mdi-plus </v-icon>
+        </v-btn> -->
       </v-app-bar>
       <v-app-bar app bottom class="bottomappbar">
         <v-bottom-navigation
@@ -93,13 +106,12 @@
             :key="index"
             @click="clickTaMobile(item.tab)"
           >
-            <!-- <span>{{item.title}}</span> -->
             <v-icon>{{ item.icon }}</v-icon>
           </v-btn>
         </v-bottom-navigation>
       </v-app-bar>
 
-      <v-main>
+      <v-main class="scrollable" v-resize="onResize">
         <v-container fluid>
           <div v-if="numberTab == 1">
             <InputCustomer :dataCustomer="dataCustomer" :isDevice="isDevice" />
@@ -108,7 +120,7 @@
             <h2>Thong bao</h2>
           </div>
           <div v-if="numberTab == 3">
-            <InputCustomer :dataCustomer="dataCustomer" />
+            <InputCustomer :dataCustomer="dataCustomer" :isDevice="isDevice" />
           </div>
           <div v-if="numberTab == 4">
             <UserLocationRent />
@@ -116,6 +128,59 @@
         </v-container>
       </v-main>
     </div>
+
+    <v-dialog v-model="dialogAdd" max-width="352">
+      <v-card>
+        <v-card-title class="text-h6">Tạo khách hàng</v-card-title>
+        <v-card-text>
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <v-text-field
+              v-model="name"
+              :rules="nameRules"
+              label="Tên khách hàng"
+              required
+            ></v-text-field>
+
+            <v-text-field
+              v-model="phone"
+              :counter="10"
+              :rules="phoneRules"
+              label="Số điện thoại"
+              required
+              type="number"
+            ></v-text-field>
+
+            <v-text-field
+              v-model="address"
+              :rules="addressRules"
+              label="Địa chỉ"
+              required
+            ></v-text-field>
+
+            <v-checkbox
+              v-model="checkbox"
+              :rules="[(v) => !!v || 'Vui lòng tích vào để tiếp tục']"
+              label="Gửi yêu cầu."
+              required
+            ></v-checkbox>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <!-- <v-btn color="green   darken-1" text @click="closeAdd">Thoát</v-btn> -->
+          <v-spacer></v-spacer>
+          <v-btn
+            :disabled="!valid"
+            color="primary"
+            @click="addDataCustomer"
+            depressed
+            height="33"
+          >
+            Lưu
+          </v-btn>
+          <v-spacer></v-spacer>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -171,10 +236,27 @@ export default {
     dataCustomer: [],
     value: 0,
     isDevice: false,
+    dialogAdd: false,
+    valid: true,
+    name: "",
+    nameRules: [(v) => !!v || "Vui lòng nhập tên khách hàng"],
+    phone: "",
+    phoneRules: [
+      (v) => !!v || "Vui lòng nhập số điện thoại",
+      (v) => (v && v.length <= 10) || "Số điện thoại không vượt quá 10 số",
+      (v) =>
+        v.match(/^((\+)33|0)[1-9](\d{2}){4}$/)
+          ? true
+          : "Số điện thoại không lệ",
+    ],
+    address: "",
+    addressRules: [(v) => !!v || "Vui lòng nhập địa chỉ"],
+    checkbox: false,
   }),
   provide() {
     return {
       closeDialog: this.closeDialog,
+      openAdd: this.openAdd,
     };
   },
   methods: {
@@ -183,10 +265,6 @@ export default {
       localStorageUtils.clearCurrentUser();
       window.location.replace("/");
     },
-    // async testAPI() {
-    //   const data = await UserApi.showUser();
-    //   console.log("DATA sale", data);
-    // },
     clickTab(numberTab) {
       if (!this.mini) {
         if (numberTab == 5) this.signOut();
@@ -199,6 +277,31 @@ export default {
       if (numberTab == 5) this.signOut();
       this.numberTab = numberTab;
       this.mini = true;
+    },
+    onResize() {
+      document.querySelector(".scrollable").style.height =
+        window.innerHeight - 110 + "px";
+    },
+    openAdd() {
+      this.dialogAdd = true;
+    },
+    closeAdd() {
+      this.dialogAdd = false;
+    },
+    addDataCustomer() {
+      if (
+        this.name == "" ||
+        this.phone == "" ||
+        this.address == "" ||
+        this.checkbox == ""
+      ) {
+        this.validate();
+      } else {
+        console.log("SAVE TAI DAY");
+      }
+    },
+    validate() {
+      this.$refs.form.validate();
     },
   },
   async created() {
@@ -219,23 +322,6 @@ export default {
     setTimeout(() => {
       this.isLoading = false;
     }, 2000);
-    // document.getElementById("navbar").style.border = "none";
-    // let prevScrollpos = window.pageYOffset;
-    // window.onscroll = () => {
-    //   const currentScrollPos = window.pageYOffset;
-    //   if (prevScrollpos > 50) {
-    //     document.getElementById("navbar").style.backgroundColor = "white";
-    //     document.getElementById("navbar").style.borderBottom =
-    //       "1px solid #E6E6E6";
-    //   } else {
-    //     document.getElementById("navbar").style.backgroundColor = "";
-    //     document.getElementById("navbar").style.border = "none";
-    //   }
-    //   prevScrollpos = currentScrollPos;
-    // };
-    // setTimeout(() => {
-    //   this.$tours["myTour"].start();
-    // }, 4000);
   },
   computed: {
     color() {
@@ -384,5 +470,19 @@ v-main {
 .v-app-bar {
   top: initial !important;
   bottom: 0 !important;
+}
+.scrollable {
+  overflow-y: scroll;
+}
+.btn-create {
+  z-index: 9;
+}
+.v-btn:not(.v-btn--round).v-size--default {
+  min-width: 64px;
+  padding: 0;
+  margin: 0 0 7px;
+}
+.v-dialog > .v-card > .v-card__text {
+  padding: 0 25px 0px;
 }
 </style>
