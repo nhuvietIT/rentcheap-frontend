@@ -61,16 +61,21 @@
           <InputCustomer :dataCustomer="dataCustomer" />
         </div>
         <div v-if="numberTab == 2" style="background: red">
+          <h2>Thong bao</h2>
+        </div>
+        <div v-if="numberTab == 3">
           <InputCustomer :dataCustomer="dataCustomer" />
         </div>
-        <div v-if="numberTab == 3" style="background: yellow">
-          <InputCustomer :dataCustomer="dataCustomer" />
+        <div v-if="numberTab == 4">
+          <UserLocationRent />
         </div>
       </v-main>
     </v-layout>
 
     <div v-else>
       <v-app-bar color="rgb(75 142 241)">
+        <v-icon size="20" color="white">{{ items[numberTab - 1].icon }}</v-icon>
+        &nbsp; &nbsp;
         <v-toolbar-title style="color: white">{{
           items[numberTab - 1].titlePage
         }}</v-toolbar-title>
@@ -97,12 +102,15 @@
       <v-main>
         <v-container fluid>
           <div v-if="numberTab == 1">
-            <InputCustomer :dataCustomer="dataCustomer" />
+            <InputCustomer :dataCustomer="dataCustomer" :isDevice="isDevice" />
           </div>
           <div v-if="numberTab == 2" style="background: red">
-            <InputCustomer :dataCustomer="dataCustomer" />
+            <h2>Thong bao</h2>
           </div>
           <div v-if="numberTab == 3">
+            <InputCustomer :dataCustomer="dataCustomer" />
+          </div>
+          <div v-if="numberTab == 4">
             <UserLocationRent />
           </div>
         </v-container>
@@ -138,17 +146,24 @@ export default {
       },
       {
         tab: 2,
-        title: "Ví",
-        icon: "mdi-wallet",
-        titlePage: "Ví của tôi",
+        title: "Thông báo",
+        icon: "mdi-bell-badge-outline",
+        titlePage: "Thông Báo",
       },
       {
         tab: 3,
+        title: "Ví",
+        icon: "mdi-wallet",
+        titlePage: "Ví của bạn",
+      },
+
+      {
+        tab: 4,
         title: "Users",
         icon: "mdi-account-group-outline",
         titlePage: "Thông tin",
       },
-      { tab: 4, title: "Đăng xuất", icon: "mdi-logout" },
+      { tab: 5, title: "Đăng xuất", icon: "mdi-logout" },
     ],
     mini: true,
     numberTab: "",
@@ -174,14 +189,14 @@ export default {
     // },
     clickTab(numberTab) {
       if (!this.mini) {
-        if (numberTab == 4) this.signOut();
+        if (numberTab == 5) this.signOut();
         this.numberTab = numberTab;
         this.mini = true;
       }
     },
     clickTaMobile(numberTab) {
       window.scrollTo(0, 0);
-      if (numberTab == 4) this.signOut();
+      if (numberTab == 5) this.signOut();
       this.numberTab = numberTab;
       this.mini = true;
     },
