@@ -195,9 +195,9 @@
         </div>
       </div>
     </section> -->
-    <v-dialog v-model="dialog" width="auto">
+    <v-dialog v-model="dialog" width="auto" persistent>
       <!-- <v-card > -->
-        <SignUpSuccess />
+      <SignUpSuccess />
       <!-- </v-card> -->
     </v-dialog>
     <v-snackbar
@@ -212,7 +212,7 @@
 </template>
 
 <script>
-// import UserApi from "@/api/userApi.js";
+import UserApi from "@/api/userApi.js";
 import SignUpSuccess from "../components/SignUpSuccess.vue";
 export default {
   components: { SignUpSuccess },
@@ -241,12 +241,16 @@ export default {
     };
   },
   created() {},
+  provide() {
+    return {
+      closeDialogSignIn: this.closeDialog,
+    };
+  },
   methods: {
     isEmpty(str) {
       return str.replace(/^\s+|\s+$/g, "");
     },
     async checkInfor() {
-      this.saveUsers();
       this.isError = true;
       this.errorIsRole = true;
 
@@ -322,30 +326,31 @@ export default {
       }
     },
     async saveUsers() {
-      // const data = await UserApi.signup([
-      //   {
-      //     fullName: this.name,
-      //     phone: this.phone,
-      //     email: this.email,
-      //     address: this.address,
-      //     isRole: this.isRole,
-      //     passWord: this.re_password,
-      //   },
-      // ]);
-      // this.snackbar = true;
-      // this.textSnackbar = data.message;
-      // this.colorSnackbar = data.token ? "rgb(52 153 15)" : "rgb(255 180 30)";
-      // if (data.token) {
-      // localStorage.getService().setToken(data.token);
-      // localStorage.getService().setCurrentUser(JSON.stringify(data.user));
-      // if (data.user.isRole === "rent")
-      //   this.$router.push("/rent").catch(() => {});
-      // if (data.user.isRole === "sale")
-      //   this.$router.push("/sale").catch(() => {});
-      // if (data.user.isRole === "admin")
-      //   this.$router.push("/admin").catch(() => {});
-      this.openDialog();
-      // }
+      const data = await UserApi.signup([
+        {
+          fullName: this.name,
+          phone: this.phone,
+          email: this.email,
+          address: this.address,
+          isRole: this.isRole,
+          passWord: this.re_password,
+        },
+      ]);
+
+      if (data.token) {
+        this.name = "";
+        this.phone = "";
+        this.email = "";
+        this.address = "";
+        this.password = "";
+        this.re_password = "";
+        this.isRole = "";
+        this.openDialog();
+      } else {
+        this.snackbar = true;
+        this.textSnackbar = data.message;
+        this.colorSnackbar = data.token ? "rgb(52 153 15)" : "rgb(255 180 30)";
+      }
     },
     checkError() {
       this.isError = false;
@@ -368,6 +373,7 @@ export default {
         return event.preventDefault();
     },
     openDialog() {
+      this.checkError()
       this.dialog = true;
       this.myMenu();
     },
@@ -400,8 +406,8 @@ i.v-icon.notranslate.mdi.mdi-checkbox-blank-outline.theme--light {
   font-size: 14px !important;
   color: rgb(119 131 197) !important;
 }
-.v-dialog:not(.v-dialog--fullscreen) { 
-  border-radius: 15px ;
+.v-dialog:not(.v-dialog--fullscreen) {
+  border-radius: 15px;
 }
 </style>
 
@@ -409,7 +415,6 @@ i.v-icon.notranslate.mdi.mdi-checkbox-blank-outline.theme--light {
 .input-error::placeholder {
   color: red !important;
   border: none;
-  font-family: Poppins;
   box-sizing: border-box;
 }
 
@@ -497,7 +502,6 @@ h2 {
   padding: 0;
   font-weight: bold;
   color: #222;
-  font-family: Poppins;
   font-size: 36px;
 }
 
@@ -517,7 +521,6 @@ body {
   color: #222;
   background: #f8f8f8;
   font-weight: 400;
-  font-family: Poppins;
 }
 
 .container {
@@ -667,7 +670,6 @@ input {
   border: none;
   border-bottom: 1px solid #999;
   padding: 6px 30px;
-  font-family: Poppins;
   box-sizing: border-box;
 }
 input::-webkit-input-placeholder {
@@ -748,7 +750,6 @@ input[type="checkbox"]:not(old):checked + label > span:before {
   font-size: 11px;
   line-height: 1.2;
   text-align: center;
-  font-family: "Material-Design-Iconic-Font";
   font-weight: bold;
 }
 
@@ -793,7 +794,6 @@ label.valid {
   background: transparent;
 }
 label.valid:after {
-  font-family: "Material-Design-Iconic-Font";
   content: "\f269";
   width: 100%;
   height: 100%;

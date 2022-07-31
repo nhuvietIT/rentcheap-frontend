@@ -6,14 +6,13 @@
       </div>
       <h1>Thành Công</h1>
       <p>Bạn có thể đăng nhập ngay bây giờ !</p>
-      <button class="gradient-button">
-        <i class="fas fa-sign-in-alt size-icon"> Đăng Nhập </i>
-      </button>
+      <button class="gradient-button" @click="openSignIn">Đăng Nhập</button>
     </div>
   </body>
 </template>
 <script>
 export default {
+  inject: ["openDialog","closeDialogSignIn"],
   data() {
     return {
       address: "",
@@ -21,6 +20,12 @@ export default {
       spinner: false,
     };
   },
+  methods:{
+    openSignIn(){
+      this.openDialog()
+      this.closeDialogSignIn()
+    }
+  }
 };
 </script>
 
@@ -41,31 +46,31 @@ export default {
   transition: all 0.5s;
   width: 155px;
   height: 45px;
-  margin-top: 12px; 
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: 400;
 }
-.gradient-button i {
-  line-height: 0;
-  margin-left: 5px;
-  color: #ffffff;
-  font-size: 17px;
+
+.gradient-button:hover {
+  background: linear-gradient(105deg, rgb(96 111 255) 0%, rgb(99 234 255) 100%);
 }
+
 body {
   text-align: center;
   background: #ebf0f5;
-  font-family: "Roboto", sans-serif;
 }
 h1 {
   color: #1da0f2;
-  font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
   font-weight: 900;
-  font-size: 35px;
+  font-size: 30px;
+  margin-top: 10px;
   margin-bottom: 10px;
 }
 p {
   color: #1da0f2;
-  font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
   font-size: 18px;
   margin: 0;
+  font-weight: inherit;
 }
 i {
   color: rgb(255 255 255);
@@ -103,11 +108,10 @@ i {
   .card {
     padding: 17px 29px;
   }
-  .gradient-button i {
-    line-height: 0;
-    margin-left: 5px;
-    color: #ffffff;
-    font-size: 17px;
+  .gradient-button {
+    font-size: 16px;
+    width: 139px;
+    height: 39px;
   }
 }
 </style>
