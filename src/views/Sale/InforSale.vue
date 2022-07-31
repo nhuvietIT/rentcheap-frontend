@@ -129,7 +129,7 @@
       </v-main>
     </div>
 
-    <v-dialog v-model="dialogAdd" max-width="352">
+    <v-dialog v-model="dialogAdd" max-width="552">
       <v-card>
         <v-card-title class="text-h6">Tạo khách hàng</v-card-title>
         <v-card-text>
@@ -160,7 +160,7 @@
             <v-checkbox
               v-model="checkbox"
               :rules="[(v) => !!v || 'Vui lòng tích vào để tiếp tục']"
-              label="Gửi yêu cầu."
+              label="Gửi yêu cầu"
               required
             ></v-checkbox>
           </v-form>
@@ -190,6 +190,7 @@ import "@/assets/css/templatemo-chain-app-dev.css";
 import "@/assets/css/animated.css";
 import "@/assets/css/owl.css";
 import localStorageUtils from "@/utils/utils_local_storage";
+const localStorage = localStorageUtils.getService();
 import CustomerApi from "@/api/customerApi.js";
 import InputCustomer from "../../components/Input_customer.vue";
 import UserLocationRent from "../../components/UserLocation_Rent.vue";
@@ -245,18 +246,20 @@ export default {
       (v) => !!v || "Vui lòng nhập số điện thoại",
       (v) => (v && v.length <= 10) || "Số điện thoại không vượt quá 10 số",
       (v) =>
-        v.match(/^((\+)33|0)[1-9](\d{2}){4}$/)
+        v?.match(/^((\+)33|0)[1-9](\d{2}){4}$/)
           ? true
           : "Số điện thoại không lệ",
     ],
     address: "",
     addressRules: [(v) => !!v || "Vui lòng nhập địa chỉ"],
     checkbox: false,
+    currentUser: {},
   }),
   provide() {
     return {
       closeDialog: this.closeDialog,
       openAdd: this.openAdd,
+      updateDataCustomer: this.updateDataCustomer,
     };
   },
   methods: {
@@ -285,10 +288,11 @@ export default {
     openAdd() {
       this.dialogAdd = true;
     },
-    closeAdd() {
+    async closeAdd() {
+      this.$refs.form.reset();
       this.dialogAdd = false;
     },
-    addDataCustomer() {
+    async addDataCustomer() {
       if (
         this.name == "" ||
         this.phone == "" ||
@@ -297,8 +301,21 @@ export default {
       ) {
         this.validate();
       } else {
-        console.log("SAVE TAI DAY");
+        const data = await CustomerApi.createCustomer([
+          {
+            userId: this.currentUser.id,
+            nameCustomer: this.name,
+            phoneCustomer: this.phone,
+            addressCustomer: this.address,
+            isApproved: "waiting",
+          },
+        ]);
+        this.dataCustomer = data;
+        this.closeAdd();
       }
+    },
+    updateDataCustomer(data) {
+      this.dataCustomer = data;
     },
     validate() {
       this.$refs.form.validate();
@@ -313,7 +330,7 @@ export default {
     } else {
       this.isDevice = false;
     }
-
+    this.currentUser = JSON.parse(localStorage.getCurrentUser());
     this.numberTab = 1;
     const data = await CustomerApi.showCustomer();
     this.dataCustomer = data[0].Customer;
@@ -337,6 +354,11 @@ export default {
         default:
           return "blue-grey";
       }
+    },
+  },
+  watch: {
+    dialog() {
+      this.$refs.form.reset();
     },
   },
 };

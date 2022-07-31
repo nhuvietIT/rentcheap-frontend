@@ -72,6 +72,7 @@ import "@/vendor/bootstrap/css/bootstrap.min.css";
 import "@/assets/css/templatemo-chain-app-dev.css";
 import "@/assets/css/animated.css";
 import "@/assets/css/owl.css";
+import CustomerApi from "@/api/customerApi.js";
 
 export default {
   name: "information-rent",
@@ -79,7 +80,7 @@ export default {
     dataCustomer: Array,
     isDevice: Boolean,
   },
-  inject: ["openAdd"],
+  inject: ["openAdd","updateDataCustomer"],
   data: () => ({
     headers: [
       {
@@ -95,15 +96,15 @@ export default {
     ],
     dialog: false,
     dialogDelete: false,
+    idCustomer: "",
   }),
   async created() {},
   mounted() {},
   computed: {
-    listCustomer() {
-      // const str = "JavaScript";
-      // const newStr = str.replace("ava", "-");
+    listCustomer() { 
       const dataCustomer = this.dataCustomer.map(
-        ({ nameCustomer, phoneCustomer, addressCustomer, isApproved }) => ({
+        ({ id, nameCustomer, phoneCustomer, addressCustomer, isApproved }) => ({
+          id: id,
           nameCustomer: nameCustomer,
           phoneCustomer: phoneCustomer,
           addressCustomer: addressCustomer,
@@ -130,11 +131,12 @@ export default {
       if (isApproved == "Đã hủy yêu cầu") return "rgb(132 29 148)";
     },
     deleteItem(item) {
-      console.log("AAA", item);
+      this.idCustomer = item.id;
       this.dialogDelete = true;
     },
-    deleteItemConfirm() {
-      console.log("BBB");
+    async deleteItemConfirm() {
+      const data = await CustomerApi.deleteCustomer(this.idCustomer); 
+      this.updateDataCustomer(data)
       this.closeDelete();
     },
     closeDelete() {
