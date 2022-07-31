@@ -89,6 +89,7 @@ const localStorage = localStorageUtils.getService();
 export default {
   name: "SignIn",
   inject: ["closeDialog"],
+  
   data() {
     return {
       phone: "",
@@ -196,8 +197,7 @@ i.v-icon.notranslate.mdi.mdi-checkbox-blank-outline.theme--light {
 <style scoped>
 .input-error::placeholder {
   color: red !important;
-  border: none;
-  font-family: Poppins;
+  border: none; 
   box-sizing: border-box;
 }
 
@@ -284,8 +284,7 @@ h2 {
   margin: 0;
   padding: 0;
   font-weight: bold;
-  color: #222;
-  font-family: Poppins;
+  color: #222; 
   font-size: 36px;
 }
 
@@ -304,8 +303,7 @@ body {
   line-height: 1.8;
   color: #222;
   background: #f8f8f8;
-  font-weight: 400;
-  font-family: Poppins;
+  font-weight: 400; 
 }
 
 .container {
@@ -454,8 +452,7 @@ input {
   display: block;
   border: none;
   border-bottom: 1px solid #999;
-  padding: 6px 30px;
-  font-family: Poppins;
+  padding: 6px 30px; 
   box-sizing: border-box;
 }
 input::-webkit-input-placeholder {
@@ -535,8 +532,7 @@ input[type="checkbox"]:not(old):checked + label > span:before {
   color: #222;
   font-size: 11px;
   line-height: 1.2;
-  text-align: center;
-  font-family: "Material-Design-Iconic-Font";
+  text-align: center; 
   font-weight: bold;
 }
 
@@ -580,8 +576,7 @@ label.valid {
   height: 20px;
   background: transparent;
 }
-label.valid:after {
-  font-family: "Material-Design-Iconic-Font";
+label.valid:after { 
   content: "\f269";
   width: 100%;
   height: 100%;
