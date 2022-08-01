@@ -294,10 +294,10 @@ export default {
     },
     async addDataCustomer() {
       if (
-        this.name == "" ||
-        this.phone == "" ||
-        this.address == "" ||
-        this.checkbox == ""
+        this.isEmpty(this.name) == "" ||
+        (this.name == null && this.isEmpty(this.phone) == "") ||
+        (this.phone == null && this.isEmpty(this.address) == "") ||
+        this.address == null
       ) {
         this.validate();
       } else {
@@ -319,6 +319,9 @@ export default {
     },
     validate() {
       this.$refs.form.validate();
+    },
+    isEmpty(str) {
+      return str?.replace(/^\s+|\s+$/g, "");
     },
   },
   async created() {
