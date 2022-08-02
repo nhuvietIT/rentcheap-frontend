@@ -9,6 +9,15 @@ const UserApi = {
     },
     showUser: () => {
         return AxiosClient.get(USER_URL + '/show_user');
+    },
+    resetPassWord: (email) => {
+        return AxiosClient.post(USER_URL + '/resetpassword', email);
+    },
+    changePassword: (code) => {
+        return AxiosClient.post(USER_URL + '/changepassword', code);
+    },
+    updatePassword: (password) => {
+        return AxiosClient.post(USER_URL + '/updatepassword', password);
     }
 
 }

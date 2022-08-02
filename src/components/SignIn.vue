@@ -11,8 +11,7 @@
               >Đăng ký tài khoản</a
             >
           </div>
-
-          <div class="signin-form">
+          <div class="signin-form" v-if="isChange == 'signin'">
             <h2 class="form-title">Đăng Nhập</h2>
             <div class="register-form" id="login-form">
               <div class="form-group">
@@ -45,17 +44,20 @@
                 <button class="form-submit" @click="checkSignin">
                   Đăng nhập
                 </button>
+                <a class="set-form-singin" @click="changeTab('resetpassword')"
+                  ><span class="social-label">Quên mật khẩu</span></a
+                >
               </div>
             </div>
             <!-- <div class="social-login"> -->
-            <!-- <span class="social-label">Hoặc đăng nhập với</span> -->
-            <!-- <ul class="socials"> background-image: url(/img/footer-bg.8252be33.png);
-                <li>
+            <!-- <ul class="socials">  -->
+            <!-- background-image: url(/img/footer-bg.8252be33.png); -->
+            <!-- <li>
                   <a href="#"
                     ><i class="display-flex-center zmdi zmdi-facebook"></i
                   ></a>
-                </li>
-                <li>
+                </li> -->
+            <!-- <li>
                   <a href="#"
                     ><i class="display-flex-center zmdi zmdi-twitter"></i
                   ></a>
@@ -64,9 +66,99 @@
                   <a href="#"
                     ><i class="display-flex-center zmdi zmdi-google"></i
                   ></a>
-                </li>
-              </ul> -->
+                </li> -->
+            <!-- </ul> -->
             <!-- </div> -->
+          </div>
+          <div class="signin-form" v-if="isChange == 'resetpassword'">
+            <h2 class="form-title">Lấy mật khẩu</h2>
+            <div class="register-form" id="login-form">
+              <div class="form-group">
+                <label for="email"><i class="fa fa-envelope"></i></label>
+                <input
+                  v-model="email"
+                  type="emails"
+                  name="email"
+                  id="email"
+                  @focus="checkError"
+                  :class="isError ? 'input-error' : ''"
+                  :placeholder="!isError ? 'Email' : errorEmail"
+                />
+              </div>
+              <div class="form-button">
+                <button class="form-submit" @click="sentEmail">Gửi</button>
+                <a class="set-form-singin" @click="changeTab('signin')"
+                  ><span class="">&nbsp; &nbsp; Đăng nhập</span></a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="signin-form" v-if="isChange == 'sent'">
+            <h2 class="form-title">Nhập mã code</h2>
+            <div class="register-form" id="login-form">
+              <div class="form-group">
+                <label for="code"><i class="fa fa-lock"></i></label>
+                <input
+                  v-model="code"
+                  type="password"
+                  name="code"
+                  id="code"
+                  @focus="checkError"
+                  :class="isError ? 'input-error' : ''"
+                  :placeholder="!isError ? 'code' : errorCode"
+                />
+              </div>
+              <p class="set-infor-check-email">
+                Vui lòng kiểm tra email của bạn, để lấy mã code.
+              </p>
+              <div class="form-button">
+                <button class="form-submit" @click="changePassword">
+                  Xác minh
+                </button>
+                <a class="set-form-singin" @click="changeTab('signin')"
+                  ><span class="">&nbsp; &nbsp; Đăng nhập</span></a
+                >
+              </div>
+            </div>
+          </div>
+          <div class="signin-form" v-if="isChange == 'updatepassword'">
+            <h2 class="form-title">Cập nhật mật khẩu</h2>
+            <div class="register-form" id="login-form">
+              <div class="form-group">
+                <label for="pass"><i class="fa fa-lock"></i></label>
+                <input
+                  v-model="password_update"
+                  type="password"
+                  name="pass"
+                  id="pass"
+                  @focus="checkError"
+                  :class="isError ? 'input-error' : ''"
+                  :placeholder="!isError ? 'Mật khẩu' : errorPassword_update"
+                />
+              </div>
+              <div class="form-group">
+                <label for="re-pass"><i class="fa fa-lock"></i></label>
+                <input
+                  v-model="re_password_update"
+                  type="password"
+                  name="re_pass"
+                  id="re_pass"
+                  @focus="checkError"
+                  :class="isError ? 'input-error' : ''"
+                  :placeholder="
+                    !isError ? 'Nhập lại mật khẩu' : errorRe_Password_update
+                  "
+                />
+              </div>
+              <div class="form-button">
+                <button class="form-submit" @click="UpdatePassword">
+                  Cập nhật
+                </button>
+                <a class="set-form-singin" @click="changeTab('signin')"
+                  ><span class="">&nbsp; &nbsp; Đăng nhập</span></a
+                >
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -89,7 +181,7 @@ const localStorage = localStorageUtils.getService();
 export default {
   name: "SignIn",
   inject: ["closeDialog"],
-  
+
   data() {
     return {
       phone: "",
@@ -98,13 +190,24 @@ export default {
       errorPhone: "",
       isError: false,
       errorPassword: "",
+      email: "",
+      errorEmail: "",
       timeout: 6000,
       colorSnackbar: "",
       snackbar: false,
       textSnackbar: "",
+      isChange: "",
+      code: "",
+      errorCode: "",
+      password_update: "",
+      errorPassword_update: "",
+      re_password_update: "",
+      errorRe_Password_update: "",
     };
   },
-  created() {},
+  created() {
+    this.isChange = "signin";
+  },
   methods: {
     isEmpty(str) {
       return str.replace(/^\s+|\s+$/g, "");
@@ -175,6 +278,98 @@ export default {
       if (!/\d/.test(event.key) && event.key !== ".")
         return event.preventDefault();
     },
+    changeTab(nameTab) {
+      this.isChange = nameTab;
+      this.checkError();
+    },
+    async sentEmail() {
+      this.isError = true;
+      if (!this.isEmailValid(this.email) || this.isEmpty(this.email) == "") {
+        this.errorEmail =
+          this.isEmpty(this.email) != ""
+            ? "Email không đúng"
+            : "Vui lòng nhập email";
+        this.email = "";
+      } else {
+        const data = await UserApi.resetPassWord({ email: this.email });
+        console.log(data);
+        if (data.isSent) {
+          this.changeTab(data.message);
+        } else {
+          this.snackbar = true;
+          this.textSnackbar = data.message;
+          this.colorSnackbar = "rgb(253 146 156)";
+        }
+      }
+    },
+    isEmailValid(email) {
+      const reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return reg.test(email);
+    },
+    async changePassword() {
+      this.isError = true;
+      if (this.isEmpty(this.code) == "") {
+        this.errorCode =
+          this.isEmpty(this.code) != ""
+            ? "Mã code không đúng"
+            : "Vui lòng nhập code";
+        this.code = "";
+      } else {
+        const data = await UserApi.changePassword({
+          email: this.email,
+          code: this.code,
+        });
+        if (data.isCode) {
+          this.changeTab(data.message);
+        } else {
+          this.errorCode = data.message;
+          this.code = "";
+        }
+      }
+    },
+    async UpdatePassword() {
+      this.isError = true;
+      if (this.isEmpty(this.password_update) == "") {
+        this.errorPassword_update = "Vui lòng nhập mật khẩu";
+        this.password_update = "";
+      }
+      if (this.isEmpty(this.re_password_update) == "") {
+        this.errorRe_Password_update = "Vui lòng nhập lại mật khẩu";
+        this.re_password_update = "";
+        return;
+      }
+      if (
+        this.isEmpty(this.password_update) !==
+        this.isEmpty(this.re_password_update)
+      ) {
+        this.snackbar = true;
+        this.textSnackbar = "Mật khẩu bạn nhập không trùng khớp ! ";
+        this.colorSnackbar = "rgb(253 146 156)";
+        return;
+      } else {
+        if (
+          this.isEmpty(this.password_update) ===
+          this.isEmpty(this.re_password_update)
+        ) {
+          const data = await UserApi.updatePassword({
+            email: this.email,
+            password: this.re_password_update,
+          });
+          console.log("daa", data);
+          if (data.isUpdate) {
+            this.isError = false;
+            this.isChange = "signin";
+            this.snackbar = true;
+            this.textSnackbar = data.message;
+            this.colorSnackbar = "rgb(52 153 15)";
+          } else {
+            this.snackbar = true;
+            this.textSnackbar = "Error server";
+            this.colorSnackbar = "rgb(52 153 15)";
+          }
+        }
+      }
+    },
   },
 };
 </script>
@@ -194,9 +389,12 @@ i.v-icon.notranslate.mdi.mdi-checkbox-blank-outline.theme--light {
 </style>
 
 <style scoped>
+.set-form-singin {
+  margin-left: 25px;
+}
 .input-error::placeholder {
   color: red !important;
-  border: none; 
+  border: none;
   box-sizing: border-box;
 }
 
@@ -283,7 +481,7 @@ h2 {
   margin: 0;
   padding: 0;
   font-weight: bold;
-  color: #222; 
+  color: #222;
   font-size: 36px;
 }
 
@@ -302,7 +500,7 @@ body {
   line-height: 1.8;
   color: #222;
   background: #f8f8f8;
-  font-weight: 400; 
+  font-weight: 400;
 }
 
 .container {
@@ -397,7 +595,7 @@ figure {
   color: #fff;
   border-bottom: none;
   width: auto;
-  padding: 15px 39px;
+  padding: 10px 39px;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -451,7 +649,7 @@ input {
   display: block;
   border: none;
   border-bottom: 1px solid #999;
-  padding: 6px 30px; 
+  padding: 6px 30px;
   box-sizing: border-box;
 }
 input::-webkit-input-placeholder {
@@ -531,7 +729,7 @@ input[type="checkbox"]:not(old):checked + label > span:before {
   color: #222;
   font-size: 11px;
   line-height: 1.2;
-  text-align: center; 
+  text-align: center;
   font-weight: bold;
 }
 
@@ -575,7 +773,7 @@ label.valid {
   height: 20px;
   background: transparent;
 }
-label.valid:after { 
+label.valid:after {
   content: "\f269";
   width: 100%;
   height: 100%;
@@ -678,6 +876,12 @@ label.valid:after {
   margin-top: 10px;
 }
 
+.set-infor-check-email {
+  color: rgb(34 34 34);
+  font-weight: 400;
+  font-size: 14px;
+}
+
 @media screen and (max-width: 1200px) {
   .container {
     width: calc(100%);
@@ -767,6 +971,19 @@ label.valid:after {
 
   .form-title {
     text-align: center;
+    font-size: 23px;
+  }
+  .set-form-singin {
+    margin: 0;
+  }
+  input {
+    font-size: 14px;
+  }
+  .form-submit {
+    margin-top: 0px;
+  }
+  .set-infor-check-email {
+    margin-bottom: 14px;
   }
 }
 @media screen and (max-width: 400px) {
@@ -781,6 +998,7 @@ label.valid:after {
   .social-label {
     margin-right: 0px;
     margin-bottom: 10px;
+    margin-top: 10px;
   }
 }
 
