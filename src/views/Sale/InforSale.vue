@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="root-infor-sale">
     <!-- ***** Preloader Start ***** -->
     <!-- <div id="js-preloader" class="js-preloader" v-if="isLoading">
       <div class="preloader-inner">
@@ -27,8 +27,7 @@
         right
         style="z-index: 3"
         ref="drawer"
-        width="280"
-        height="100vh"
+        width="280" 
         src="../../assets/images/drawer.png"
         dark
         mini-variant-width="52"
@@ -70,7 +69,7 @@
           <h2>Thong bao</h2>
         </div>
         <div v-if="numberTab == 3">
-          <InputCustomer :dataCustomer="dataCustomer" />
+          <WalletSale :isDevice="isDevice" />
         </div>
         <div v-if="numberTab == 4">
           <UserLocationRent />
@@ -86,7 +85,7 @@
           items[numberTab - 1].titlePage
         }}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon @click="openAdd" fab>
+        <v-btn icon @click="openAdd" fab v-if="numberTab == 1">
           <v-icon size="39" color="white"> mdi-plus</v-icon>
         </v-btn>
         <!-- <v-btn class="mx-2" size="39" fab dark color="indigo">
@@ -104,7 +103,7 @@
           <v-btn
             v-for="(item, index) in items"
             :key="index"
-            @click="clickTaMobile(item.tab)"
+            @click="clickTabMobile(item.tab)"
           >
             <v-icon>{{ item.icon }}</v-icon>
           </v-btn>
@@ -120,7 +119,7 @@
             <h2>Thong bao</h2>
           </div>
           <div v-if="numberTab == 3">
-            <InputCustomer :dataCustomer="dataCustomer" :isDevice="isDevice" />
+            <WalletSale :isDevice="isDevice" />
           </div>
           <div v-if="numberTab == 4">
             <UserLocationRent />
@@ -194,9 +193,10 @@ const localStorage = localStorageUtils.getService();
 import CustomerApi from "@/api/customerApi.js";
 import InputCustomer from "../../components/Input_customer.vue";
 import UserLocationRent from "../../components/UserLocation_Rent.vue";
+import WalletSale from "../../components/wallet/Wallet_Sale.vue";
 export default {
   name: "information-sale",
-  components: { InputCustomer, UserLocationRent },
+  components: { InputCustomer, UserLocationRent, WalletSale },
   data: () => ({
     dialog: false,
     isLoading: true,
@@ -275,7 +275,7 @@ export default {
         this.mini = true;
       }
     },
-    clickTaMobile(numberTab) {
+    clickTabMobile(numberTab) {
       window.scrollTo(0, 0);
       if (numberTab == 5) this.signOut();
       this.numberTab = numberTab;
@@ -297,7 +297,8 @@ export default {
         this.isEmpty(this.name) == "" ||
         (this.name == null && this.isEmpty(this.phone) == "") ||
         (this.phone == null && this.isEmpty(this.address) == "") ||
-        this.address == null
+        this.address == null ||
+        !this.checkbox
       ) {
         this.validate();
       } else {
@@ -334,7 +335,7 @@ export default {
       this.isDevice = false;
     }
     this.currentUser = JSON.parse(localStorage.getCurrentUser());
-    this.numberTab = 1;
+    this.numberTab = 3;
     const data = await CustomerApi.showCustomer();
     this.dataCustomer = data[0].Customer;
   },
@@ -368,6 +369,9 @@ export default {
 </script>
 
 <style scoped>
+.root-infor-sale{
+  overflow: hidden;
+}
 v-main {
   width: 200px;
 }
