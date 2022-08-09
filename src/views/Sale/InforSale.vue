@@ -27,7 +27,7 @@
         right
         style="z-index: 3"
         ref="drawer"
-        width="280" 
+        width="280"
         src="../../assets/images/drawer.png"
         dark
         mini-variant-width="52"
@@ -110,7 +110,10 @@
         </v-bottom-navigation>
       </v-app-bar>
 
-      <v-main class="scrollable" v-resize="onResize">
+      <v-main
+        class='scrollable'
+        v-resize="onResize"
+      >
         <v-container fluid>
           <div v-if="numberTab == 1">
             <InputCustomer :dataCustomer="dataCustomer" :isDevice="isDevice" />
@@ -369,7 +372,7 @@ export default {
 </script>
 
 <style scoped>
-.root-infor-sale{
+.root-infor-sale {
   overflow: hidden;
 }
 v-main {
@@ -513,5 +516,8 @@ v-main {
 }
 .v-dialog > .v-card > .v-card__text {
   padding: 0 25px 0px;
+}
+@media screen and (max-width: 768px) {
+ 
 }
 </style>

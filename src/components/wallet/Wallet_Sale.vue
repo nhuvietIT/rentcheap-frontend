@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="rentandsale" :class="!isDevice ? 'services section' : 'section'">
-      <div class="container">
+      <div class="container scrollable-wallet-mobile">
         <div class="row">
           <!-- <div class="infor-customer">
             <div
@@ -19,15 +19,17 @@
 
           <div class="container-wallet">
             <v-col cols="12">
-              <v-card color="rgb(99 155 221)" dark>
-                <div class="d-flex flex-no-wrap justify-space-between">
+              <v-card color="rgb(99 134 230)" dark>
+                <div class="d-flex flex-no-wrap justify-space-between height-title">
                   <div>
-                    <v-card-title class="ml-0 mt-0">
+                    <v-card-title class="ml-0 mt-0 card-title-mobile">
                       Xin chào Việt !
                     </v-card-title>
                     <v-card-subtitle class="v-card-subtitle-wallet">
-                      <v-icon size="25" color="cback"> mdi-currency-usd</v-icon>
-                      <v-icon size="18" color="cback">
+                      <v-icon :size="!isDevice ? 25 : 20" color="cback">
+                        mdi-currency-usd</v-icon
+                      >
+                      <v-icon size="16" color="cback">
                         {{
                           sumMoney.toLocaleString("vi-VN", {
                             style: "currency",
@@ -39,7 +41,7 @@
                   </div>
                   <div>
                     <v-card-actions>
-                      <v-btn class="mt-6 mr-2" outlined rounded small>
+                      <v-btn class="mt-5 mr-2" outlined rounded small>
                         Yêu cầu rút tiền
                       </v-btn>
                     </v-card-actions>
@@ -51,7 +53,7 @@
           <v-card
             v-scroll.self="onScroll"
             class="overflow-y-auto wallet-content"
-            max-height="600"
+            :max-height="!isDevice ? 600 : ''"
             style="box-shadow: none"
           >
             <v-col
@@ -64,13 +66,12 @@
                 <div class="d-flex flex-no-wrap justify-space-between">
                   <div>
                     <v-card-title
-                      class="text-h7"
+                      class="text-title"
                       v-text="item.title"
-                      style="color: rgb(76, 175, 80)"
                     ></v-card-title>
 
                     <v-card-subtitle
-                      ><span
+                      ><span class="text-subtitle"
                         >Tiền bạn được nhận :
                         <span style="color: rgb(244 67 54); font-weight: bold">{{
                           item.money.toLocaleString("vi-VN", {
@@ -201,6 +202,9 @@ export default {
       },
     ],
   }),
+  props: {
+    isDevice: Boolean,
+  },
   methods: {
     onScroll() {
       this.scrollInvoked++;
@@ -225,10 +229,10 @@ export default {
 </style>
 <style scoped>
 .services {
-  padding-top: 52px;
+  padding-top: 21px;
 }
 .container {
-  max-width: 50%;
+  max-width: 60%;
 }
 .wallet-card {
   background: white;
@@ -244,24 +248,23 @@ export default {
   margin-top: 18px;
 }
 .wallet-content {
-  background: white;
-  border-top-right-radius: 30px;
+  background: none;
+  z-index: 2;
 }
-/* .wallet-content {
-  background: white;
-  border-top-right-radius: 30px;
-  float: left;
-  height: 379px;
-  overflow-y: scroll;
-    white-space: nowrap;
+.wallet-content::-webkit-scrollbar {
+  width: 3px;
 }
 
-.force-overflow {
-  min-height: 450px;
-} */
+.wallet-content::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(208 199 254);
+}
+
+.wallet-content::-webkit-scrollbar-thumb {
+  background: rgb(99 134 230);
+}
+
 .waller-billing {
   padding: 12px;
-  background-color: beige;
   border-radius: 15px;
   border-top-right-radius: 0;
   margin: 0 12px;
@@ -286,5 +289,39 @@ export default {
 .v-card-subtitle-wallet {
   padding: 0 10px 16px;
   font-weight: bold;
+}
+.text-title {
+  font-size: 14px;
+  color: rgb(76, 175, 80);
+}
+@media screen and (max-width: 768px) {
+  .services {
+    padding-top: 0;
+  }
+  .container {
+    max-width: 100%;
+  }
+  .text-title {
+    font-size: 13px;
+  }
+  .text-subtitle {
+    font-size: 13px;
+  }
+  .v-card__subtitle,
+  .v-card__text,
+  .v-card__title {
+    padding: 9px;
+  }
+  .card-title-mobile {
+    font-size: 1.25rem;
+    margin-bottom: 5px;
+  }
+  .v-card-subtitle-wallet {
+    padding: 5px 4px 0px;
+    font-size: 1px !important;
+  }
+  .height-title{
+    height: 82px;
+  }
 }
 </style>
