@@ -65,14 +65,14 @@
         <div v-if="numberTab == 1">
           <InputCustomer :dataCustomer="dataCustomer" />
         </div>
-        <div v-if="numberTab == 2" style="background: red">
-          <h2>Thong bao</h2>
+        <div v-if="numberTab == 2">
+          <Notification :isDevice="isDevice" />
         </div>
         <div v-if="numberTab == 3">
           <WalletSale :isDevice="isDevice" />
         </div>
         <div v-if="numberTab == 4">
-          <UserLocationRent />
+          <Profile :isDevice="isDevice" />
         </div>
       </v-main>
     </v-layout>
@@ -110,22 +110,19 @@
         </v-bottom-navigation>
       </v-app-bar>
 
-      <v-main
-        class='scrollable'
-        v-resize="onResize"
-      >
+      <v-main class="scrollable" v-resize="onResize">
         <v-container fluid>
           <div v-if="numberTab == 1">
             <InputCustomer :dataCustomer="dataCustomer" :isDevice="isDevice" />
           </div>
-          <div v-if="numberTab == 2" style="background: red">
-            <h2>Thong bao</h2>
+          <div v-if="numberTab == 2">
+            <Notification :isDevice="isDevice" />
           </div>
           <div v-if="numberTab == 3">
             <WalletSale :isDevice="isDevice" />
           </div>
           <div v-if="numberTab == 4">
-            <UserLocationRent />
+            <Profile />
           </div>
         </v-container>
       </v-main>
@@ -195,11 +192,17 @@ import localStorageUtils from "@/utils/utils_local_storage";
 const localStorage = localStorageUtils.getService();
 import CustomerApi from "@/api/customerApi.js";
 import InputCustomer from "../../components/Input_customer.vue";
-import UserLocationRent from "../../components/UserLocation_Rent.vue";
 import WalletSale from "../../components/wallet/Wallet_Sale.vue";
+import Notification from "../../components/notification/Notification_Sale.vue";
+import Profile from "../../components/profile/Profile_Sale.vue";
 export default {
   name: "information-sale",
-  components: { InputCustomer, UserLocationRent, WalletSale },
+  components: {
+    InputCustomer,
+    WalletSale,
+    Notification,
+    Profile,
+  },
   data: () => ({
     dialog: false,
     isLoading: true,
@@ -338,7 +341,7 @@ export default {
       this.isDevice = false;
     }
     this.currentUser = JSON.parse(localStorage.getCurrentUser());
-    this.numberTab = 3;
+    this.numberTab = 4;
     const data = await CustomerApi.showCustomer();
     this.dataCustomer = data[0].Customer;
   },
@@ -518,6 +521,5 @@ v-main {
   padding: 0 25px 0px;
 }
 @media screen and (max-width: 768px) {
- 
 }
 </style>

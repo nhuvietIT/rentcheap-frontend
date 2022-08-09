@@ -80,7 +80,7 @@ export default {
     dataCustomer: Array,
     isDevice: Boolean,
   },
-  inject: ["openAdd","updateDataCustomer"],
+  inject: ["openAdd", "updateDataCustomer"],
   data: () => ({
     headers: [
       {
@@ -101,7 +101,7 @@ export default {
   async created() {},
   mounted() {},
   computed: {
-    listCustomer() { 
+    listCustomer() {
       const dataCustomer = this.dataCustomer.map(
         ({ id, nameCustomer, phoneCustomer, addressCustomer, isApproved }) => ({
           id: id,
@@ -135,8 +135,8 @@ export default {
       this.dialogDelete = true;
     },
     async deleteItemConfirm() {
-      const data = await CustomerApi.deleteCustomer(this.idCustomer); 
-      this.updateDataCustomer(data)
+      const data = await CustomerApi.deleteCustomer(this.idCustomer);
+      this.updateDataCustomer(data);
       this.closeDelete();
     },
     closeDelete() {
@@ -148,6 +148,10 @@ export default {
 <style>
 .v-data-table > .v-data-table__wrapper > table > thead > tr > th {
   font-size: 0.9rem !important;
+}
+tr.v-data-table__mobile-table-row {
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 10%),
+    0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
 }
 </style>
 
@@ -272,6 +276,10 @@ export default {
   }
   .infor-customer-mobile {
     font-size: 26px;
+  }
+  .infor-customer {
+    padding: 12px 12px;
+    background: rgb(240 241 255);
   }
 }
 </style>
