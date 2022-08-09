@@ -58,27 +58,50 @@
         </v-btn>
       </v-card-subtitle>
 
-      <p v-if="!editBio" class="pl-6 pr-6 pt-0">
-        {{ Bio }}
-      </p>
-      <v-textarea
-        v-model="Bio"
+      <!-- <p v-if="!editBio" class="pl-6 pr-6 pt-0">
+        {{ currentUser.fullName }}
+      </p> -->
+      <!-- <v-textarea
+        v-model="currentUser.fullName"
         rows="2"
         v-if="editBio"
         label="Editar minha Bio"
         class="pa-6"
-      ></v-textarea>
+      ></v-textarea> -->
+      <v-text-field
+        class="pa-6"
+        v-model="currentUser.fullName"
+        prepend-icon="mdi-account-arrow-right"
+        label="Họ & tên"
+        :disabled="!editBio"
+      ></v-text-field>
       <v-spacer></v-spacer>
       <v-text-field
         class="pa-6"
-        v-model="Phone"
-        prepend-icon="mdi-whatsapp"
-        label="Phone"
+        v-model="currentUser.phone"
+        prepend-icon="mdi-phone-forward"
+        label="Số điện Thoại"
         :disabled="!editBio"
-      >{{aaa}}</v-text-field>
+      ></v-text-field>
+      <v-spacer></v-spacer>
+      <v-text-field
+        class="pa-6"
+        v-model="currentUser.email"
+        prepend-icon="mdi-email-check-outline"
+        label="Email"
+        :disabled="!editBio"
+      ></v-text-field>
+      <v-spacer></v-spacer>
+      <v-text-field
+        class="pa-6"
+        v-model="currentUser.address"
+        prepend-icon="mdi-whatsapp"
+        label="Địa chỉ"
+        :disabled="!editBio"
+      ></v-text-field>
       <v-spacer></v-spacer>
 
-      <v-row>
+      <!-- <v-row>
         <v-col cols="6" class="text-end">
           <v-list-item-content class="sutitles">
             <v-list-item-title class="text-h6"> 1002 </v-list-item-title>
@@ -95,7 +118,7 @@
             >
           </v-list-item-content>
         </v-col>
-      </v-row>
+      </v-row> -->
       <!--<v-row>
               <v-col class="d-flex justify-end align-right pa-2" cols="6">
                 <v-btn rounded color="primary" dark>
