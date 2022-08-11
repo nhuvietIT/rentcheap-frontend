@@ -3,52 +3,56 @@
     <div id="rentandsale" :class="!isDevice ? 'services section' : 'section'">
       <div class="container">
         <div class="row">
-          <div class="infor-customer">
-            <div
-              class="section-heading wow fadeInDown"
-              data-wow-duration="1s"
-              data-wow-delay="0.5s"
-              v-if="!isDevice"
-            >
-              <h4 class="infor-customer-mobile">
-                <em>Danh sách khách hàng </em>
-              </h4>
-              <img src="@/assets/images/heading-line-dec.png" alt="" />
-            </div>
-            <v-data-table
-              :headers="headers"
-              :items="listCustomer"
-              class="elevation-1"
-              disable-sort
-            >
-              <template v-slot:[`header.actions`]="{}">
-                <v-btn icon @click="openAdd">
-                  <v-icon size="39" color="rgb(67 161 243)"
-                    >mdi-plus-box</v-icon
+          <v-card class="mx-auto bg">
+            <div :class="!isDevice ? 'infor-customer' : ''">
+              <div
+                class="section-heading wow fadeInDown"
+                data-wow-duration="1s"
+                data-wow-delay="0.5s"
+                v-if="!isDevice"
+              >
+                <br />
+                <h4 class="infor-customer-mobile">
+                  <em>Danh sách khách hàng </em>
+                </h4>
+                <img src="@/assets/images/heading-line-dec.png" alt="" />
+              </div>
+              <v-data-table
+                :headers="headers"
+                :items="listCustomer"
+                class="elevation-1"
+                disable-sort
+              >
+                <template v-slot:[`header.actions`]="{}">
+                  <v-btn icon @click="openAdd">
+                    <v-icon size="39" color="rgb(67 161 243)"
+                      >mdi-plus-box</v-icon
+                    >
+                    &nbsp;&nbsp;
+                  </v-btn>
+                </template>
+                <template v-slot:[`item.actions`]="{ item }">
+                  <v-icon color="red" @click="deleteItem(item)">
+                    mdi-delete
+                  </v-icon>
+                </template>
+                <template v-slot:[`item.isApproved`]="{ item }">
+                  <v-chip
+                    :text-color="getColor(item.isApproved)"
+                    class="is-approved"
                   >
-                  &nbsp;&nbsp;
-                </v-btn>
-              </template>
-              <template v-slot:[`item.actions`]="{ item }">
-                <v-icon color="red" @click="deleteItem(item)">
-                  mdi-delete
-                </v-icon>
-              </template>
-              <template v-slot:[`item.isApproved`]="{ item }">
-                <v-chip
-                  :text-color="getColor(item.isApproved)"
-                  class="is-approved"
-                >
-                  {{ item.isApproved }}
-                </v-chip>
-              </template>
-              <template v-slot:[`item.addressCustomer`]="{ item }">
-                <div :class="!isDevice ? '' : 'cut-address'">
-                  {{ item.addressCustomer }}
-                </div>
-              </template>
-            </v-data-table>
-          </div>
+                    {{ item.isApproved }}
+                  </v-chip>
+                </template>
+                <template v-slot:[`item.addressCustomer`]="{ item }">
+                  <div :class="!isDevice ? '' : 'cut-address'">
+                    {{ item.addressCustomer }}
+                  </div>
+                </template>
+              </v-data-table>
+            </div>
+            <br />
+          </v-card>
         </div>
       </div>
     </div>
@@ -269,7 +273,20 @@ tr.v-data-table__mobile-table-row {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.container {
+  max-width: 90%;
+}
+.bg {
+  background: rgb(255, 197, 185);
+  background: linear-gradient(
+    0deg,
+    rgb(216 208 240) 0%,
+    rgba(255, 255, 255, 0.667) 35%,
+    rgba(255, 255, 255, 0.7539390756302521) 74%
+  );
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
 @media screen and (max-width: 768px) {
   .services {
     padding-top: 39px !important;
@@ -280,6 +297,20 @@ tr.v-data-table__mobile-table-row {
   .infor-customer {
     padding: 12px 12px;
     background: rgb(240 241 255);
+  }
+  .container {
+    max-width: 100%;
+  }
+  .bg {
+    background: rgb(255, 197, 185);
+    background: linear-gradient(
+      0deg,
+      rgb(216 208 240) 10%,
+      rgba(255, 255, 255, 0.667) 35%,
+      rgba(255, 255, 255, 0.7539390756302521) 74%
+    );
+    margin-top: 12px;
+    margin-bottom: 0px;
   }
 }
 </style>

@@ -76,7 +76,7 @@ import "@/assets/css/animated.css";
 import "@/assets/css/owl.css";
 import localStorageUtils from "@/utils/utils_local_storage";
 // import UserApi from "@/api/userApi.js";
-import InputCustomer from "../../components/Input_customer.vue";
+import InputCustomer from "../../components/customer/Input_customer.vue";
 export default {
   name: "information-sale",
   components: { InputCustomer },

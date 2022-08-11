@@ -2,52 +2,55 @@
   <div>
     <div id="rentandsale" :class="!isDevice ? 'services section' : 'section'">
       <div class="container scrollable-wallet-mobile">
-        <div
-          class="section-heading wow fadeInDown"
-          data-wow-duration="1s"
-          data-wow-delay="0.5s"
-          v-if="!isDevice"
-        >
-          <h4 class="infor-customer-mobile">
-            <em>Thông Báo </em>
-          </h4>
-          <img src="@/assets/images/heading-line-dec.png" alt="" />
-        </div>
+        <v-card class="mx-auto bg" elevation="2">
+          <div
+            class="section-heading wow fadeInDown"
+            data-wow-duration="1s"
+            data-wow-delay="0.5s"
+            v-if="!isDevice"
+          >
+          <br/>
+            <h4 class="infor-customer-mobile">
+              <em>Thông Báo </em>
+            </h4>
+            <img src="@/assets/images/heading-line-dec.png" alt="" />
+          </div>
 
-        <v-list
-          three-line
-          v-scroll.self="onScroll"
-          class="overflow-y-auto wallet-content"
-          :max-height="!isDevice ? 600 : ''"
-          style="box-shadow: none"
-        >
-          <template v-for="(item, index) in items">
-            <v-subheader
-              v-if="item.header"
-              :key="item.header"
-              v-text="item.header"
-            ></v-subheader>
+          <v-list
+            three-line
+            v-scroll.self="onScroll"
+            class="overflow-y-auto wallet-content"
+            :max-height="!isDevice ? 600 : ''"
+            style="box-shadow: none"
+          >
+            <template v-for="(item, index) in items">
+              <v-subheader
+                v-if="item.header"
+                :key="item.header"
+                v-text="item.header"
+              ></v-subheader>
 
-            <v-divider
-              v-else-if="item.divider"
-              :key="index"
-              :inset="item.inset"
-            ></v-divider>
+              <v-divider
+                v-else-if="item.divider"
+                :key="index"
+                :inset="item.inset"
+              ></v-divider>
 
-            <v-list-item v-else :key="item.title">
-              <v-list-item-avatar>
-                <v-img :src="item.avatar"></v-img>
-              </v-list-item-avatar>
+              <v-list-item v-else :key="item.title">
+                <v-list-item-avatar>
+                  <v-img :src="item.avatar"></v-img>
+                </v-list-item-avatar>
 
-              <v-list-item-content>
-                <v-list-item-title v-html="item.title"></v-list-item-title>
-                <v-list-item-subtitle
-                  v-html="item.subtitle"
-                ></v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-          </template>
-        </v-list>
+                <v-list-item-content>
+                  <v-list-item-title v-html="item.title"></v-list-item-title>
+                  <v-list-item-subtitle
+                    v-html="item.subtitle"
+                  ></v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </template>
+          </v-list>
+        </v-card>
       </div>
     </div>
   </div>
@@ -187,6 +190,17 @@ export default {
   font-size: 14px;
   color: rgb(76, 175, 80);
 }
+.bg {
+  background: rgb(255, 197, 185);
+  background: linear-gradient(
+    0deg,
+    rgba(237, 237, 237, 0.712) 0%,
+    rgba(255, 255, 255, 0.667) 35%,
+    rgba(255, 255, 255, 0.7539390756302521) 74%
+  );
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
 @media screen and (max-width: 768px) {
   .services {
     padding-top: 0;
@@ -222,6 +236,17 @@ export default {
   }
   .container-wallet {
     padding: 0;
+  }
+  .bg {
+    background: rgb(255, 197, 185);
+    background: linear-gradient(
+      0deg,
+      rgba(237, 237, 237, 0.712) 0%,
+      rgba(255, 255, 255, 0.667) 35%,
+      rgba(255, 255, 255, 0.7539390756302521) 74%
+    );
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 }
 </style>

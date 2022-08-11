@@ -122,7 +122,7 @@
             <WalletSale :isDevice="isDevice" />
           </div>
           <div v-if="numberTab == 4">
-            <Profile />
+            <Profile :isDevice="isDevice" />
           </div>
         </v-container>
       </v-main>
@@ -191,7 +191,7 @@ import "@/assets/css/owl.css";
 import localStorageUtils from "@/utils/utils_local_storage";
 const localStorage = localStorageUtils.getService();
 import CustomerApi from "@/api/customerApi.js";
-import InputCustomer from "../../components/Input_customer.vue";
+import InputCustomer from "../../components/customer/Input_customer.vue";
 import WalletSale from "../../components/wallet/Wallet_Sale.vue";
 import Notification from "../../components/notification/Notification_Sale.vue";
 import Profile from "../../components/profile/Profile_Sale.vue";

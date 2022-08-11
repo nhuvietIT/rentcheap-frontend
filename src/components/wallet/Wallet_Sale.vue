@@ -2,7 +2,7 @@
   <div>
     <div id="rentandsale" :class="!isDevice ? 'services section' : 'section'">
       <div class="container scrollable-wallet-mobile">
-        <div class="row">
+        <v-card class="mx-auto bg" elevation="2">
           <!-- <div class="infor-customer">
             <div
               class="section-heading wow fadeInDown"
@@ -16,7 +16,6 @@
               <img src="@/assets/images/heading-line-dec.png" alt="" />
             </div>
           </div> -->
-
           <div class="container-wallet">
             <v-col cols="12">
               <v-card color="rgb(99 134 230)" dark>
@@ -31,7 +30,7 @@
                       <v-icon :size="!isDevice ? 25 : 20" color="cback">
                         mdi-currency-usd</v-icon
                       >
-                      <v-icon size="16" color="cback">
+                      <v-icon size="14" color="cback">
                         {{
                           sumMoney.toLocaleString("vi-VN", {
                             style: "currency",
@@ -92,7 +91,7 @@
               </v-card>
             </v-col>
           </v-card>
-        </div>
+        </v-card>
       </div>
     </div>
   </div>
@@ -134,6 +133,14 @@ export default {
         artist: "Bạn đã giới thiệu thành công",
         money: 10000,
         dateIntro: "05/08/2022",
+      },
+      {
+        // color: "rgb(237 243 253)",
+        // src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
+        title: "Bạn đã giới thiệu thành công",
+        artist: "Bạn đã giới thiệu thành công",
+        money: 10000,
+        dateIntro: "07/08/2022",
       },
       {
         // color: "rgb(237 243 253)",
@@ -253,6 +260,17 @@ export default {
   font-size: 14px;
   color: rgb(76, 175, 80);
 }
+.bg {
+  background: rgb(255, 197, 185);
+  background: linear-gradient(
+    0deg,
+    rgba(237, 237, 237, 0.712) 0%,
+    rgba(255, 255, 255, 0.667) 35%,
+    rgba(255, 255, 255, 0.7539390756302521) 74%
+  );
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
 @media screen and (max-width: 768px) {
   .services {
     padding-top: 0;
@@ -272,7 +290,7 @@ export default {
     padding: 9px;
   }
   .card-title-mobile {
-    font-size: 1.25rem;
+    font-size: 1rem;
     margin-bottom: 5px;
   }
   .v-card-subtitle-wallet {
@@ -287,6 +305,17 @@ export default {
   }
   .container-wallet {
     padding: 0;
+  }
+  .bg {
+    background: rgb(255, 197, 185);
+    background: linear-gradient(
+      0deg,
+      rgba(237, 237, 237, 0.712) 0%,
+      rgba(255, 255, 255, 0.667) 35%,
+      rgba(255, 255, 255, 0.7539390756302521) 74%
+    );
+    margin-top: 0px;
+    margin-bottom: 0px;
   }
 }
 </style>

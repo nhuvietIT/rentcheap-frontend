@@ -1,107 +1,108 @@
 <template>
-  <div>
-    <v-card class="mx-auto bg" elevation="2">
-      <v-img
-        class=""
-        height="239px"
-        src="http://unblast.com/wp-content/uploads/2021/09/Real-Estate-Agent-Illustration.jpg"
-        gradient="150deg, rgb(185 224 255 / 58%) 0%, rgb(243 220 246 / 52%) 35%, rgb(223 255 242 / 74%) 74%"
-      >
-      </v-img>
-      <v-row justify="center">
-        <v-col
-          align-self="start"
-          class="d-flex justify-center align-center pa-0"
-          cols="12"
+  <div id="rentandsale" :class="!isDevice ? 'services section' : 'section'">
+    <div class="container scrollable-wallet-mobile">
+      <v-card class="mx-auto bg" elevation="2">
+        <v-img
+          class=""
+          height="200px"
+          src="http://unblast.com/wp-content/uploads/2021/09/Real-Estate-Agent-Illustration.jpg"
+          gradient="150deg, rgb(185 224 255 / 58%) 0%, rgb(243 220 246 / 52%) 35%, rgb(223 255 242 / 74%) 74%"
         >
-          <v-avatar
-            class="profile avatar-center-heigth avatar-shadow"
-            color="grey"
-            size="164"
+        </v-img>
+        <v-row justify="center">
+          <v-col
+            align-self="start"
+            class="d-flex justify-center align-center pa-0"
+            cols="12"
           >
-            <v-btn @click="onButtonClick" class="upload-btn" x-large icon>
-              <v-icon> mdi-camera </v-icon>
+            <v-avatar
+              class="profile avatar-center-heigth avatar-shadow"
+              color="grey"
+              size="164"
+            >
+              <v-btn @click="onButtonClick" class="upload-btn" x-large icon>
+                <v-icon> mdi-camera </v-icon>
+              </v-btn>
+              <input
+                ref="uploader"
+                class="d-none"
+                type="file"
+                accept="image/*"
+                :change="onFileChanged"
+              />
+              <v-img
+                src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"
+              ></v-img>
+            </v-avatar>
+          </v-col>
+        </v-row>
+        <v-list-item color="#0000" class="profile-text-name ma-4 pt-16">
+          <v-list-item-content>
+            <v-list-item-title class="text-h6">
+              {{ currentUser.fullName }}
+            </v-list-item-title>
+            <v-list-item-subtitle>{{
+              currentUser.isRole == "sale" ? "Người giới thiệu" : ""
+            }}</v-list-item-subtitle>
+          </v-list-item-content>
+          <v-list-item-action>
+            <v-btn class="mx-2" fab dark color="indigo" small>
+              <v-icon dark> mdi-plus </v-icon>
             </v-btn>
-            <input
-              ref="uploader"
-              class="d-none"
-              type="file"
-              accept="image/*"
-              :change="onFileChanged"
-            />
-            <v-img
-              src="https://cdn.vuetifyjs.com/images/profiles/marcus.jpg"
-            ></v-img>
-          </v-avatar>
-        </v-col>
-      </v-row>
-      <v-list-item color="#0000" class="profile-text-name ma-4 pt-16">
-        <v-list-item-content>
-          <v-list-item-title class="text-h6">
-            {{ currentUser.fullName }}
-          </v-list-item-title>
-          <v-list-item-subtitle>{{
-            currentUser.isRole == "sale" ? "Người giới thiệu" : ""
-          }}</v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-btn class="mx-2" fab dark color="indigo" small>
-            <v-icon dark> mdi-plus </v-icon>
+          </v-list-item-action>
+        </v-list-item>
+
+        <v-card-subtitle>
+          <b class="ml-2">Chỉnh sửa</b>
+          <v-btn v-on:click="saveBio" icon>
+            <v-icon small>{{ bioIcon }}</v-icon>
           </v-btn>
-        </v-list-item-action>
-      </v-list-item>
+        </v-card-subtitle>
 
-      <v-card-subtitle>
-        <b class="ml-2">Chỉnh sửa</b>
-        <v-btn v-on:click="saveBio" icon>
-          <v-icon small>{{ bioIcon }}</v-icon>
-        </v-btn>
-      </v-card-subtitle>
-
-      <!-- <p v-if="!editBio" class="pl-6 pr-6 pt-0">
+        <!-- <p v-if="!editBio" class="pl-6 pr-6 pt-0">
         {{ currentUser.fullName }}
       </p> -->
-      <!-- <v-textarea
+        <!-- <v-textarea
         v-model="currentUser.fullName"
         rows="2"
         v-if="editBio"
         label="Editar minha Bio"
         class="pa-6"
       ></v-textarea> -->
-      <v-text-field
-        class="pa-6"
-        v-model="currentUser.fullName"
-        prepend-icon="mdi-account-arrow-right"
-        label="Họ & tên"
-        :disabled="!editBio"
-      ></v-text-field>
-      <v-spacer></v-spacer>
-      <v-text-field
-        class="pa-6"
-        v-model="currentUser.phone"
-        prepend-icon="mdi-phone-forward"
-        label="Số điện Thoại"
-        :disabled="!editBio"
-      ></v-text-field>
-      <v-spacer></v-spacer>
-      <v-text-field
-        class="pa-6"
-        v-model="currentUser.email"
-        prepend-icon="mdi-email-check-outline"
-        label="Email"
-        :disabled="!editBio"
-      ></v-text-field>
-      <v-spacer></v-spacer>
-      <v-text-field
-        class="pa-6"
-        v-model="currentUser.address"
-        prepend-icon="mdi-whatsapp"
-        label="Địa chỉ"
-        :disabled="!editBio"
-      ></v-text-field>
-      <v-spacer></v-spacer>
+        <v-text-field
+          class="pa-4"
+          v-model="currentUser.fullName"
+          prepend-icon="mdi-account-arrow-right"
+          label="Họ & tên"
+          :disabled="!editBio"
+        ></v-text-field>
+        <v-spacer></v-spacer>
+        <v-text-field
+          class="pa-4"
+          v-model="currentUser.phone"
+          prepend-icon="mdi-phone-forward"
+          label="Số điện Thoại"
+          :disabled="!editBio"
+        ></v-text-field>
+        <v-spacer></v-spacer>
+        <v-text-field
+          class="pa-4"
+          v-model="currentUser.email"
+          prepend-icon="mdi-email-check-outline"
+          label="Email"
+          :disabled="!editBio"
+        ></v-text-field>
+        <v-spacer></v-spacer>
+        <v-text-field
+          class="pa-4"
+          v-model="currentUser.address"
+          prepend-icon="mdi-whatsapp"
+          label="Địa chỉ"
+          :disabled="!editBio"
+        ></v-text-field>
+        <v-spacer></v-spacer>
 
-      <!-- <v-row>
+        <!-- <v-row>
         <v-col cols="6" class="text-end">
           <v-list-item-content class="sutitles">
             <v-list-item-title class="text-h6"> 1002 </v-list-item-title>
@@ -119,7 +120,7 @@
           </v-list-item-content>
         </v-col>
       </v-row> -->
-      <!--<v-row>
+        <!--<v-row>
               <v-col class="d-flex justify-end align-right pa-2" cols="6">
                 <v-btn rounded color="primary" dark>
                   Agendar um Horário
@@ -131,7 +132,8 @@
                 </v-btn>
               </v-col>
             </v-row>-->
-    </v-card>
+      </v-card>
+    </div>
   </div>
 </template>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
@@ -146,7 +148,7 @@ export default {
       Phone: "00 00000-0000",
       editBio: false,
       Bio: "my bio test about myself, what do you know about me?",
-      bioIcon: "mdi-pencil",
+      bioIcon: "mdi-pencil-outline ",
       focus: "",
       type: "month",
       typeToLabel: {
@@ -180,7 +182,7 @@ export default {
     },
     saveBio() {
       this.editBio = !this.editBio;
-      this.bioIcon = "mdi-content-save";
+      this.bioIcon = "mdi-content-save-all";
       if (!this.editBio) {
         this.bioIcon = "mdi-pencil";
 
@@ -273,6 +275,12 @@ export default {
 </script>
 
 <style scoped>
+.services {
+  padding-top: 21px;
+}
+.container {
+  max-width: 60%;
+}
 .avatar-center-heigth {
   position: absolute;
 }
@@ -307,13 +315,37 @@ export default {
     rgba(255, 255, 255, 0.667) 35%,
     rgba(255, 255, 255, 0.7539390756302521) 74%
   );
-  margin-top: 32px;
-  max-width: 80%;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .avatar-shadow {
   box-shadow: 0px 0px 10px 0px rgba(50, 12, 112, 0.75);
   -webkit-box-shadow: 0px 0px 10px 0px rgba(50, 12, 112, 0.75);
   -moz-box-shadow: 0px 0px 10px 0px rgba(50, 12, 112, 0.75);
+}
+.v-card__subtitle,
+.v-card__text,
+.v-card__title {
+  padding: 5px 9px;
+}
+@media screen and (max-width: 768px) {
+  .services {
+    padding-top: 0;
+  }
+  .container {
+    max-width: 100%;
+  }
+  .bg {
+    background: rgb(255, 197, 185);
+    background: linear-gradient(
+      0deg,
+      rgba(237, 237, 237, 0.712) 0%,
+      rgba(255, 255, 255, 0.667) 35%,
+      rgba(255, 255, 255, 0.7539390756302521) 74%
+    );
+    margin-top: 0px;
+    margin-bottom: 0px;
+  }
 }
 </style>
