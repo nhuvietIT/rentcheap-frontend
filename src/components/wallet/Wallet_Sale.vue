@@ -1,99 +1,109 @@
 <template>
   <div>
-    <div id="rentandsale" :class="!isDevice ? 'services section' : 'section'">
-      <div class="container scrollable-wallet-mobile">
-        <v-card class="mx-auto bg" elevation="2">
-          <!-- <div class="infor-customer">
-            <div
-              class="section-heading wow fadeInDown"
-              data-wow-duration="1s"
-              data-wow-delay="0.5s"
-              v-if="!isDevice"
-            >
-              <h4 class="infor-customer-mobile">
-                <em>Ví của bạn</em>
-              </h4>
-              <img src="@/assets/images/heading-line-dec.png" alt="" />
+    <v-card class="mx-auto bg" elevation="2">
+      <div class="container-wallet">
+        <v-col cols="12">
+          <v-card color="deep-purple lighten-2" dark>
+            <div class="d-flex flex-no-wrap justify-space-between height-title">
+              <div>
+                <v-card-title class="ml-0 mt-0 card-title-mobile">
+                  Xin chào Việt !
+                </v-card-title>
+                <v-card-subtitle class="v-card-subtitle-wallet">
+                  <v-icon :size="!isDevice ? 25 : 20" color="cback">
+                    mdi-currency-usd</v-icon
+                  >
+                  <v-icon size="14" color="cback">
+                    {{
+                      sumMoney.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })
+                    }}
+                  </v-icon>
+                </v-card-subtitle>
+              </div>
+              <div>
+                <v-card-actions v-if="totab">
+                  <v-btn
+                    class="mt-6 mr-2"
+                    outlined
+                    rounded
+                    small
+                    @click="withDrawMoney"
+                  >
+                    Yêu cầu rút tiền
+                  </v-btn>
+                </v-card-actions>
+                <v-card-actions v-else>
+                  <v-btn
+                    class="mt-6 mr-2"
+                    outlined
+                    rounded
+                    small
+                    @click="withDrawMoney"
+                  >
+                    <v-icon>mdi-arrow-left</v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </div>
             </div>
-          </div> -->
-          <div class="container-wallet">
-            <v-col cols="12">
-              <v-card color="rgb(99 134 230)" dark>
-                <div
-                  class="d-flex flex-no-wrap justify-space-between height-title"
-                >
-                  <div>
-                    <v-card-title class="ml-0 mt-0 card-title-mobile">
-                      Xin chào Việt !
-                    </v-card-title>
-                    <v-card-subtitle class="v-card-subtitle-wallet">
-                      <v-icon :size="!isDevice ? 25 : 20" color="cback">
-                        mdi-currency-usd</v-icon
-                      >
-                      <v-icon size="14" color="cback">
-                        {{
-                          sumMoney.toLocaleString("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          })
-                        }}
-                      </v-icon>
-                    </v-card-subtitle>
-                  </div>
-                  <div>
-                    <v-card-actions>
-                      <v-btn class="mt-5 mr-2" outlined rounded small>
-                        Yêu cầu rút tiền
-                      </v-btn>
-                    </v-card-actions>
-                  </div>
-                </div>
-              </v-card>
-            </v-col>
-          </div>
-          <v-card
-            v-scroll.self="onScroll"
-            class="overflow-y-auto wallet-content"
-            :max-height="!isDevice ? 600 : ''"
-            style="box-shadow: none"
-          >
-            <v-col
-              cols="12"
-              style="padding: 5px 12px"
-              v-for="(item, i) in itemss"
-              :key="i"
-            >
-              <v-card :color="item.color">
-                <div class="d-flex flex-no-wrap justify-space-between">
-                  <div>
-                    <v-card-title
-                      class="text-title"
-                      v-text="item.title"
-                    ></v-card-title>
-
-                    <v-card-subtitle
-                      ><span class="text-subtitle"
-                        >Tiền bạn được nhận :
-                        <span style="color: rgb(244 67 54); font-weight: bold">{{
-                          item.money.toLocaleString("vi-VN", {
-                            style: "currency",
-                            currency: "VND",
-                          })
-                        }}</span>
-                      </span></v-card-subtitle
-                    >
-                  </div>
-
-                  <v-card-actions>
-                    <v-card-subtitle v-text="item.dateIntro"></v-card-subtitle
-                  ></v-card-actions>
-                </div>
-              </v-card>
-            </v-col>
           </v-card>
-        </v-card>
+        </v-col>
       </div>
-    </div>
+      <v-card
+        v-scroll.self="onScroll"
+        class="overflow-y-auto wallet-content"
+        :max-height="!isDevice ? 500 : 379"
+        style="box-shadow: none"
+        v-if="totab"
+      >
+        <v-col
+          cols="12"
+          style="padding-top: 0px"
+          v-for="(item, i) in itemss"
+          :key="i"
+        >
+          <v-card :color="item.color">
+            <div class="d-flex flex-no-wrap justify-space-between">
+              <div>
+                <v-card-title
+                  class="text-title"
+                  v-text="item.title"
+                ></v-card-title>
+
+                <v-card-subtitle
+                  ><span class="text-subtitle"
+                    >Tiền bạn được nhận :
+                    <span style="color: rgb(244 67 54); font-weight: bold">{{
+                      item.money.toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })
+                    }}</span>
+                  </span></v-card-subtitle
+                >
+              </div>
+
+              <v-card-actions>
+                <v-card-subtitle v-text="item.dateIntro"></v-card-subtitle
+              ></v-card-actions>
+            </div>
+          </v-card>
+        </v-col>
+      </v-card>
+      <v-card
+        v-scroll.self="onScroll"
+        class="overflow-y-auto wallet-content"
+        :max-height="!isDevice ? 500 : 379"
+        style="box-shadow: none"
+        v-else
+      >
+        <v-col cols="12" style="padding-top: 0px">
+          <v-card> Cooming soon</v-card>
+        </v-col>
+      </v-card>
+    </v-card>
   </div>
 </template>
 
@@ -107,7 +117,7 @@ export default {
         // src: "https://cdn.vuetifyjs.com/images/cards/halcyon.png",
         title: "Bạn đã giới thiệu thành công",
         artist: "Bạn đã giới thiệu thành công",
-        money: 1000000,
+        money: 100000,
         dateIntro: "07/08/2022",
       },
       {
@@ -167,6 +177,7 @@ export default {
         dateIntro: "07/08/2022",
       },
     ],
+    totab: true,
   }),
   props: {
     isDevice: Boolean,
@@ -174,6 +185,9 @@ export default {
   methods: {
     onScroll() {
       this.scrollInvoked++;
+    },
+    withDrawMoney() {
+      this.totab = !this.totab;
     },
   },
   computed: {
@@ -205,7 +219,7 @@ export default {
 }
 .container-wallet {
   width: 100%;
-  z-index: 1;
+  z-index: 100;
 }
 .wallet-header {
   font-size: 16px;
@@ -268,8 +282,8 @@ export default {
     rgba(255, 255, 255, 0.667) 35%,
     rgba(255, 255, 255, 0.7539390756302521) 74%
   );
-  margin-top: 30px;
-  margin-bottom: 30px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 @media screen and (max-width: 768px) {
   .services {

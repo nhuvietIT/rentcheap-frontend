@@ -68,10 +68,10 @@
         <div v-if="numberTab == 2">
           <Notification :isDevice="isDevice" />
         </div>
-        <div v-if="numberTab == 3">
+        <!-- <div v-if="numberTab == 3">
           <WalletSale :isDevice="isDevice" />
-        </div>
-        <div v-if="numberTab == 4">
+        </div> -->
+        <div v-if="numberTab == 3">
           <Profile :isDevice="isDevice" />
         </div>
       </v-main>
@@ -118,10 +118,10 @@
           <div v-if="numberTab == 2">
             <Notification :isDevice="isDevice" />
           </div>
-          <div v-if="numberTab == 3">
+          <!-- <div v-if="numberTab == 3">
             <WalletSale :isDevice="isDevice" />
-          </div>
-          <div v-if="numberTab == 4">
+          </div> -->
+          <div v-if="numberTab == 3">
             <Profile :isDevice="isDevice" />
           </div>
         </v-container>
@@ -192,14 +192,12 @@ import localStorageUtils from "@/utils/utils_local_storage";
 const localStorage = localStorageUtils.getService();
 import CustomerApi from "@/api/customerApi.js";
 import InputCustomer from "../../components/customer/Input_customer.vue";
-import WalletSale from "../../components/wallet/Wallet_Sale.vue";
 import Notification from "../../components/notification/Notification_Sale.vue";
 import Profile from "../../components/profile/Profile_Sale.vue";
 export default {
   name: "information-sale",
   components: {
     InputCustomer,
-    WalletSale,
     Notification,
     Profile,
   },
@@ -222,20 +220,20 @@ export default {
         icon: "mdi-bell-badge-outline",
         titlePage: "Thông Báo",
       },
-      {
-        tab: 3,
-        title: "Ví",
-        icon: "mdi-wallet",
-        titlePage: "Ví của bạn",
-      },
+      // {
+      //   tab: 3,
+      //   title: "Ví",
+      //   icon: "mdi-wallet",
+      //   titlePage: "Ví của bạn",
+      // },
 
       {
-        tab: 4,
+        tab: 3,
         title: "Users",
         icon: "mdi-account-group-outline",
         titlePage: "Thông tin",
       },
-      { tab: 5, title: "Đăng xuất", icon: "mdi-logout" },
+      { tab: 4, title: "Đăng xuất", icon: "mdi-logout" },
     ],
     mini: true,
     numberTab: "",
@@ -276,14 +274,14 @@ export default {
     },
     clickTab(numberTab) {
       if (!this.mini) {
-        if (numberTab == 5) this.signOut();
+        if (numberTab == 4) this.signOut();
         this.numberTab = numberTab;
         this.mini = true;
       }
     },
     clickTabMobile(numberTab) {
       window.scrollTo(0, 0);
-      if (numberTab == 5) this.signOut();
+      if (numberTab == 4) this.signOut();
       this.numberTab = numberTab;
       this.mini = true;
     },
@@ -341,7 +339,7 @@ export default {
       this.isDevice = false;
     }
     this.currentUser = JSON.parse(localStorage.getCurrentUser());
-    this.numberTab = 4;
+    this.numberTab = 3;
     const data = await CustomerApi.showCustomer();
     this.dataCustomer = data[0].Customer;
   },

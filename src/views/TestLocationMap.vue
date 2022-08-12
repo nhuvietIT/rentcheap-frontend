@@ -6,7 +6,7 @@
       <h3 style="color: #ffffff">Location address</h3>
     </div>
 
-    <div>
+    <!-- <div>
       <table
         border-color="#2828da"
         cellpadding="0"
@@ -66,6 +66,74 @@
           </tr>
         </tbody>
       </table>
+    </div> -->
+
+    <!-- <div class="html">
+      <body>
+        <div class="container" id="item1">
+          <h1>My Contend</h1>
+          <p>
+            But let's take a look at each property individually to see how to
+            define them.
+          </p>
+        </div>
+        <div class="container" id="item2">
+          <h1>My Contend</h1>
+          <p>
+            But let's take a look at each property individually to see how to
+            define them.
+          </p>
+        </div>
+        <div class="container" id="item3">
+          <h1>My Contend</h1>
+          <p>
+            But let's take a look at each property individually to see how to
+            define them.
+          </p>
+        </div>
+        <div class="container" id="item4">
+          <h1>My Contend</h1>
+          <p>
+            But let's take a look at each property individually to see how to
+            define them.
+          </p>
+        </div>
+        <div class="container" id="item5">
+          <h1>My Contend</h1>
+          <p>
+            But let's take a look at each property individually to see how to
+            define them.
+          </p>
+        </div>
+      </body>
+    </div> -->
+    <div class="container">
+      <div class="table-game">Table Game</div>
+      <div v-for="(item, index) in arrGame1" :key="index">
+        <div class="item1">
+          <div :class="'item1-' + index"></div>
+          <!-- <div class="item1-2"></div>
+          <div class="item1-3"></div>
+          <div class="item1-4"></div>
+          <div class="item1-5"></div> -->
+        </div>
+      </div>
+
+      <div class="item2">
+        <div class="item2-1"></div>
+        <div class="item2-2"></div>
+        <div class="item2-3"></div>
+        <div class="item2-4"></div>
+        <div class="item2-5"></div>
+      </div>
+      <div class="item3">
+        <div class="item3-1"></div>
+        <div class="item3-2"></div>
+        <div class="item3-3"></div>
+        <div class="item3-4"></div>
+        <div class="item3-5"></div>
+      </div>
+      <!-- <div class="item4"></div> -->
     </div>
   </div>
 </template>
@@ -78,9 +146,25 @@ export default {
     innerHTML: "",
     lat: "",
     lng: "",
+    arrGame1: [],
+    arrGame2: [],
+    arrGame3: [],
   }),
   created() {
-    this.inforIP(); 
+    this.inforIP();
+    let member = 15;
+    for (let i = 0; i < member; i++) {
+      if (i <= 5) {
+        this.arrGame1.push({ member: i });
+      }
+      if (i <= 10 && i > 5) {
+        this.arrGame2.push({ member: i });
+      }
+      if (i <= 15 && i > 10) {
+        this.arrGame3.push({ member: i });
+      }
+    }
+    console.log("ARR", this.arrGame1, this.arrGame2, this.arrGame3);
   },
   methods: {
     inforIP() {
@@ -252,5 +336,257 @@ iframe {
   .set-body {
     width: 100%;
   }
+}
+</style>
+<style lang="scss" scoped>
+.circle {
+  display: grid;
+  grid-template-areas: "layer";
+  place-items: center;
+  // background: #185adb;
+  border-radius: 50%;
+  --radius: 25vmin;
+  width: calc(2 * var(--radius));
+  height: calc(2 * var(--radius));
+}
+
+.stat {
+  grid-area: layer;
+  width: 10vmin;
+  height: 10vmin;
+  border-radius: 50%;
+
+  display: grid;
+  place-items: center;
+
+  background: #ffc947;
+  // color: #185adb;
+  font-weight: bold;
+  font-size: 3vmin;
+
+  // Decimal value, 0-1 based on the child's index.
+  --d: calc(var(--i) / var(--total));
+  // Offset to get better starting placement on the circle
+  --r-offset: -0.25turn;
+  // Full circle
+  --r-amount: 1turn;
+  // Rotation based on the decimal and r modifiers
+  --r: calc((var(--r-amount) * var(--d)) + var(--r-offset));
+  // Rotate, transform out, then negative rotation so the content appears upright
+  --transform: rotate(var(--r)) translate(var(--radius))
+    rotate(calc(-1 * var(--r)));
+
+  transform: var(--transform);
+  transition: transform 1.5s ease-in-out;
+  //transition-delay: calc(0.1s * var(--i));
+
+  // .circle:hover & {
+  //   --radius: calc(-20vmin);
+  //   // Animate the rotation
+  //   --r-offset: -1.75turn; //0.75turn;
+  // }
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 10px 10px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    ". item1 ."
+    "item4 table-game item2"
+    ". item3 .";
+  width: 100%;
+  height: 100%;
+  background: rgb(207, 240, 197);
+  padding: 0;
+  margin: 0;
+}
+
+.table-game {
+  align-self: center;
+  grid-area: table-game;
+  width: 100%;
+  height: 200px;
+  background: rgb(84, 161, 81);
+  text-align: center;
+  padding: 79px;
+  color: #ffff;
+  font-weight: 500;
+}
+
+.item1 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas: "item1-1 item1-2 item1-3 item1- item1-5";
+  justify-self: center;
+  align-self: center;
+  grid-area: item1;
+  width: 100%;
+  height: 70%;
+  // background: rgb(135, 233, 237);
+}
+
+.item1-1 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item1-1;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item1-2 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item1-2;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item1-3 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item1-3;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item1-4 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item1-4;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item1-5 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item1-5;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+
+.item2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas: "item2-4 item2-2 item2-1 item2-3 item2-5";
+  justify-self: center;
+  align-self: center;
+  grid-area: item2;
+  width: 100%;
+  height: 70%;
+  // background: rgb(135, 233, 237);
+}
+.item2-1 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item2-1;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item2-2 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item2-2;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item2-3 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item2-3;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item2-4 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item2-4;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item2-5 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item2-5;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item3 {
+  display: grid;
+  grid-template-columns: repeat(5, auto);
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas: "item3-4 item3-2 item3-1 item3-3 item3-5";
+  justify-self: center;
+  align-self: center;
+  grid-area: item3;
+  width: 100%;
+  height: 70%;
+  // background: rgb(135, 233, 237);
+}
+.item3-1 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item3-1;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item3-2 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item3-2;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item3-3 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item3-3;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item3-4 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item3-4;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+.item3-5 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item3-5;
+  width: 90%;
+  height: 150px;
+  background: rgb(223, 122, 82);
+}
+
+.item4 {
+  justify-self: center;
+  align-self: center;
+  grid-area: item4;
+  width: 100%;
+  height: 100%;
+  background: rgb(135, 233, 237);
 }
 </style>

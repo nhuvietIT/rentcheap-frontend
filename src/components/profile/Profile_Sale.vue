@@ -46,8 +46,15 @@
             }}</v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
-            <v-btn class="mx-2" fab dark color="indigo" small>
-              <v-icon dark> mdi-plus </v-icon>
+            <v-btn
+              class="mx-2"
+              fab
+              dark
+              color="deep-purple lighten-1"
+              small
+              @click="dialog = true"
+            >
+              <v-icon dark> mdi-wallet </v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -59,16 +66,6 @@
           </v-btn>
         </v-card-subtitle>
 
-        <!-- <p v-if="!editBio" class="pl-6 pr-6 pt-0">
-        {{ currentUser.fullName }}
-      </p> -->
-        <!-- <v-textarea
-        v-model="currentUser.fullName"
-        rows="2"
-        v-if="editBio"
-        label="Editar minha Bio"
-        class="pa-6"
-      ></v-textarea> -->
         <v-text-field
           class="pa-4"
           v-model="currentUser.fullName"
@@ -101,49 +98,33 @@
           :disabled="!editBio"
         ></v-text-field>
         <v-spacer></v-spacer>
-
-        <!-- <v-row>
-        <v-col cols="6" class="text-end">
-          <v-list-item-content class="sutitles">
-            <v-list-item-title class="text-h6"> 1002 </v-list-item-title>
-            <v-list-item-subtitle class="text-caption"
-              >Curtidas</v-list-item-subtitle
-            >
-          </v-list-item-content>
-        </v-col>
-        <v-col cols="6" class="text-start">
-          <v-list-item-content class="sutitles">
-            <v-list-item-title class="text-h6"> 10 </v-list-item-title>
-            <v-list-item-subtitle class="text-caption"
-              >Seguindo</v-list-item-subtitle
-            >
-          </v-list-item-content>
-        </v-col>
-      </v-row> -->
-        <!--<v-row>
-              <v-col class="d-flex justify-end align-right pa-2" cols="6">
-                <v-btn rounded color="primary" dark>
-                  Agendar um Horário
-                </v-btn>
-              </v-col>
-              <v-col class="d-flex justify-left align-left pa-2" cols="6">
-                <v-btn rounded color="primary" dark>
-                  Contato
-                </v-btn>
-              </v-col>
-            </v-row>-->
       </v-card>
     </div>
+    <v-dialog v-model="dialog" max-width="679" content-class="elevation-0">
+      <v-card>
+        <v-card-title
+          >Ví của bạn
+          <v-spacer></v-spacer>
+          <v-btn icon @click="dialog = false">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-card-title>
+        <WalletSale :isDevice="isDevice" />
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
 <script>
 import localStorageUtils from "@/utils/utils_local_storage";
+import WalletSale from "../wallet/Wallet_Sale.vue";
 const localStorage = localStorageUtils.getService();
 export default {
+  components: { WalletSale },
   data() {
     return {
+      dialog: false,
       currentUser: {},
       Phone: "00 00000-0000",
       editBio: false,
@@ -273,8 +254,16 @@ export default {
   computed: {},
 };
 </script>
-
+<style>
+/* .v-dialog {
+  box-shadow: none 
+} */
+</style>
 <style scoped>
+/* .v-dialog-wallet {
+  box-shadow: none !important;
+  background: red;
+} */
 .services {
   padding-top: 21px;
 }
@@ -295,7 +284,7 @@ export default {
 }
 .upload-btn {
   position: absolute !important;
-  z-index: 999;
+  z-index: 9;
   top: 121px;
   color: cadetblue;
   background: blueviolet;
