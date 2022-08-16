@@ -61,7 +61,7 @@
 
         <v-card-subtitle>
           <b class="ml-2">Chỉnh sửa</b>
-          <v-btn v-on:click="saveBio" icon>
+          <v-btn v-on:click="UpdateUser" icon>
             <v-icon small>{{ bioIcon }}</v-icon>
           </v-btn>
         </v-card-subtitle>
@@ -120,6 +120,7 @@
 import localStorageUtils from "@/utils/utils_local_storage";
 import WalletSale from "../wallet/Wallet_Sale.vue";
 const localStorage = localStorageUtils.getService();
+import UserApi from "@/api/userApi.js";
 export default {
   components: { WalletSale },
   data() {
@@ -161,13 +162,23 @@ export default {
     onScroll() {
       this.scrollInvoked++;
     },
-    saveBio() {
+    async UpdateUser() {
       this.editBio = !this.editBio;
       this.bioIcon = "mdi-content-save-all";
       if (!this.editBio) {
         this.bioIcon = "mdi-pencil";
-
-        alert("salvo com sucesso!");
+        const data = await UserApi.updateUser([
+          {
+            id: this.currentUser.id,
+            fullName: this.currentUser.fullName,
+            phone: this.currentUser.phone,
+            email: this.currentUser.email,
+            address: this.currentUser.address,
+            isRole: "sale",
+          },
+        ]);
+        console.log("data", data);
+        // alert("salvo com sucesso!");
       }
     },
     onButtonClick() {
