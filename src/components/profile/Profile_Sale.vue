@@ -75,19 +75,34 @@
         ></v-text-field>
         <v-spacer></v-spacer>
         <v-text-field
-          class="pa-4"
-          v-model="currentUser.phone"
+          class="pa-4 iserror"
+          v-model="phone"
           prepend-icon="mdi-phone-forward"
           label="Số điện Thoại"
           :disabled="!editBio"
+          :rules="
+            isUpdate
+              ? [rules.required, rules.min]
+              : [rules.required, rules.min, errorPhone]
+          "
+          ref="form"
+          @focus="errorHandle"
         ></v-text-field>
         <v-spacer></v-spacer>
         <v-text-field
           class="pa-4"
-          v-model="currentUser.email"
+          v-model="email"
           prepend-icon="mdi-email-check-outline"
           label="Email"
           :disabled="!editBio"
+          :rules="
+            isUpdate
+              ? [rules.requiredEmail, rules.email]
+              : [rules.requiredEmail, rules.email, errorEmail]
+          "
+          ref="forms"
+          @focus="errorHandle"
+          error-messages=""
         ></v-text-field>
         <v-spacer></v-spacer>
         <v-text-field
@@ -127,7 +142,8 @@ export default {
     return {
       dialog: false,
       currentUser: {},
-      Phone: "00 00000-0000",
+      phone: "",
+      email: "",
       editBio: false,
       Bio: "my bio test about myself, what do you know about me?",
       bioIcon: "mdi-pencil-outline ",
@@ -148,6 +164,19 @@ export default {
       tab: null,
       items: ["Minha agenda", "Sobre Mim"],
       text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+      rules: {
+        required: (value) => !!value || "Nhập số điện thoại",
+        requiredEmail: (v) => !!v || "Nhập email",
+        min: (v) => v.length == 10 || "Số điện thoại phải 10 kí tự",
+        email: (value) => {
+          const pattern =
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return pattern.test(value) || "Email không hợp lệ";
+        },
+      },
+      errorPhone: "",
+      errorEmail: "",
+      isUpdate: false,
     };
   },
   props: {
@@ -155,31 +184,81 @@ export default {
   },
   created() {
     this.currentUser = JSON.parse(localStorage.getCurrentUser());
-
-    console.log(this.currentUser);
+    this.phone = this.currentUser.phone;
+    this.email = this.currentUser.email;
+    // console.log(this.currentUser);
   },
   methods: {
+    isEmpty(str) {
+      return str.replace(/^\s+|\s+$/g, "");
+    },
+    regexPhoneNumber(str) {
+      const regexPhoneNumber = /^((\+)33|0)[1-9](\d{2}){4}$/;
+      if (str.match(regexPhoneNumber)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    isEmailValid(email) {
+      const reg = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+      return reg.test(email);
+    },
     onScroll() {
       this.scrollInvoked++;
+    },
+    resetValidation() {
+      this.$refs.form.resetValidation();
     },
     async UpdateUser() {
       this.editBio = !this.editBio;
       this.bioIcon = "mdi-content-save-all";
-      if (!this.editBio) {
-        this.bioIcon = "mdi-pencil";
-        const data = await UserApi.updateUser([
-          {
-            id: this.currentUser.id,
-            fullName: this.currentUser.fullName,
-            phone: this.currentUser.phone,
-            email: this.currentUser.email,
-            address: this.currentUser.address,
-            isRole: "sale",
-          },
-        ]);
-        console.log("data", data);
-        // alert("salvo com sucesso!");
+      if (
+        this.regexPhoneNumber(this.isEmpty(this.phone)) &&
+        this.isEmailValid(this.isEmpty(this.email))
+      ) {
+        if (!this.editBio) {
+          const data = await UserApi.updateUser([
+            {
+              id: this.currentUser.id,
+              fullName: this.currentUser.fullName,
+              phone: this.phone,
+              email: this.email,
+              address: this.currentUser.address,
+              isRole: "sale",
+            },
+          ]);
+
+          console.log(data, this.isUpdate);
+          if (data.isError == "phone") {
+            this.editBio = true;
+            this.isUpdate = data.isUpdate;
+            this.errorPhone = data.message;
+            return;
+          }
+          if (data.isError == "email") {
+            this.editBio = true;
+            this.isUpdate = data.isUpdate;
+            this.errorEmail = data.message;
+            return;
+          }
+          this.editBio = false;
+          this.errorPhone = "";
+          this.errorEmail = "";
+          this.resetValidation();
+          this.bioIcon = "mdi-pencil-outline ";
+        }
+      } else {
+        this.errorPhone = "";
+        this.errorEmail = "";
+        this.editBio = true;
+        this.bioIcon = "mdi-content-save-all";
       }
+    },
+    errorHandle() {
+      this.errorPhone = "";
+      this.errorEmail = "";
+      this.isUpdate = true;
     },
     onButtonClick() {
       this.isSelecting = true;
@@ -265,16 +344,8 @@ export default {
   computed: {},
 };
 </script>
-<style>
-/* .v-dialog {
-  box-shadow: none 
-} */
-</style>
+<style></style>
 <style scoped>
-/* .v-dialog-wallet {
-  box-shadow: none !important;
-  background: red;
-} */
 .services {
   padding-top: 21px;
 }
@@ -329,6 +400,7 @@ export default {
 .v-card__title {
   padding: 5px 9px;
 }
+
 @media screen and (max-width: 768px) {
   .services {
     padding-top: 0;
