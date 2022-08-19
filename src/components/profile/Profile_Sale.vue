@@ -61,7 +61,7 @@
 
         <v-card-subtitle>
           <b class="ml-2">Chỉnh sửa</b>
-          <v-btn v-on:click="UpdateUser" icon>
+          <v-btn v-on:click="UpdateUser()" icon>
             <v-icon small>{{ bioIcon }}</v-icon>
           </v-btn>
         </v-card-subtitle>
@@ -76,7 +76,7 @@
         <v-spacer></v-spacer>
         <v-text-field
           class="pa-4 iserror"
-          v-model="phone"
+          v-model="currentUser.phone"
           prepend-icon="mdi-phone-forward"
           label="Số điện Thoại"
           :disabled="!editBio"
@@ -87,22 +87,7 @@
           "
           ref="form"
           @focus="errorHandle"
-        ></v-text-field>
-        <v-spacer></v-spacer>
-        <v-text-field
-          class="pa-4"
-          v-model="email"
-          prepend-icon="mdi-email-check-outline"
-          label="Email"
-          :disabled="!editBio"
-          :rules="
-            isUpdate
-              ? [rules.requiredEmail, rules.email]
-              : [rules.requiredEmail, rules.email, errorEmail]
-          "
-          ref="forms"
-          @focus="errorHandle"
-          error-messages=""
+          type="number"
         ></v-text-field>
         <v-spacer></v-spacer>
         <v-text-field
@@ -111,6 +96,30 @@
           prepend-icon="mdi-whatsapp"
           label="Địa chỉ"
           :disabled="!editBio"
+        ></v-text-field>
+        <v-spacer></v-spacer>
+
+        <v-card-subtitle>
+          <b class="ml-2">Thay đổi email</b>
+          <v-btn v-on:click="updateEmail()" icon>
+            <v-icon small>{{ bioIconEmail }}</v-icon>
+          </v-btn>
+        </v-card-subtitle>
+        <v-spacer></v-spacer>
+        <v-text-field
+          class="pa-4"
+          v-model="currentUser.email"
+          prepend-icon="mdi-email-check-outline"
+          label="Email"
+          :disabled="!editEmail"
+          :rules="
+            isUpdate
+              ? [rules.requiredEmail, rules.email]
+              : [rules.requiredEmail, rules.email, errorEmail]
+          "
+          ref="forms"
+          @focus="errorHandle"
+          error-messages=""
         ></v-text-field>
         <v-spacer></v-spacer>
       </v-card>
@@ -145,8 +154,10 @@ export default {
       phone: "",
       email: "",
       editBio: false,
+      editEmail: false,
       Bio: "my bio test about myself, what do you know about me?",
       bioIcon: "mdi-pencil-outline ",
+      bioIconEmail: "mdi-pencil-outline ",
       focus: "",
       type: "month",
       typeToLabel: {
@@ -184,9 +195,9 @@ export default {
   },
   created() {
     this.currentUser = JSON.parse(localStorage.getCurrentUser());
-    this.phone = this.currentUser.phone;
-    this.email = this.currentUser.email;
-    // console.log(this.currentUser);
+    // this.phone = this.currentUser.phone;
+    // this.email = this.currentUser.email;
+    console.log(this.currentUser);
   },
   methods: {
     isEmpty(str) {
@@ -210,49 +221,72 @@ export default {
     resetValidation() {
       this.$refs.form.resetValidation();
     },
+    async updateEmail() {
+      this.editEmail = !this.editEmail;
+      this.bioIconEmail = "mdi-content-save-all";
+      if (!this.editEmail) {
+        if (this.isEmailValid(this.isEmpty(this.currentUser.email))) {
+          const data = await UserApi.updateUser(
+            [
+              {
+                id: this.currentUser.id,
+                fullName: this.currentUser.fullName,
+                phone: this.currentUser.phone,
+                email: this.currentUser.email,
+                address: this.currentUser.address,
+                isRole: "sale",
+              },
+            ],
+            { typeUpdate: "emailSale" }
+          );
+
+          if (data.isError == "email") {
+            this.editEmail = true;
+            this.isUpdate = data.isUpdate;
+            this.errorEmail = data.message;
+            return;
+          }
+          console.log("data", data);
+          this.editEmail = false;
+          this.bioIconEmail = "mdi-pencil-outline ";
+        } else {
+          this.editEmail = true;
+          this.bioIconEmail = "mdi-content-save-all";
+        }
+      }
+    },
     async UpdateUser() {
       this.editBio = !this.editBio;
       this.bioIcon = "mdi-content-save-all";
-      if (
-        this.regexPhoneNumber(this.isEmpty(this.phone)) &&
-        this.isEmailValid(this.isEmpty(this.email))
-      ) {
-        if (!this.editBio) {
-          const data = await UserApi.updateUser([
-            {
-              id: this.currentUser.id,
-              fullName: this.currentUser.fullName,
-              phone: this.phone,
-              email: this.email,
-              address: this.currentUser.address,
-              isRole: "sale",
-            },
-          ]);
 
-          console.log(data, this.isUpdate);
+      if (!this.editBio) {
+        if (this.regexPhoneNumber(this.isEmpty(this.currentUser.phone))) {
+          const data = await UserApi.updateUser(
+            [
+              {
+                id: this.currentUser.id,
+                fullName: this.currentUser.fullName,
+                phone: this.currentUser.phone,
+                email: this.currentUser.email,
+                address: this.currentUser.address,
+                isRole: "sale",
+              },
+            ],
+            { typeUpdate: "inforSale" }
+          );
+
           if (data.isError == "phone") {
             this.editBio = true;
             this.isUpdate = data.isUpdate;
             this.errorPhone = data.message;
             return;
           }
-          if (data.isError == "email") {
-            this.editBio = true;
-            this.isUpdate = data.isUpdate;
-            this.errorEmail = data.message;
-            return;
-          }
           this.editBio = false;
-          this.errorPhone = "";
-          this.errorEmail = "";
-          this.resetValidation();
           this.bioIcon = "mdi-pencil-outline ";
+        } else {
+          this.editBio = true;
+          this.bioIcon = "mdi-content-save-all";
         }
-      } else {
-        this.errorPhone = "";
-        this.errorEmail = "";
-        this.editBio = true;
-        this.bioIcon = "mdi-content-save-all";
       }
     },
     errorHandle() {

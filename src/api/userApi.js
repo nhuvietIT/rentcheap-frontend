@@ -19,8 +19,8 @@ const UserApi = {
     updatePassword: (password) => {
         return AxiosClient.post(USER_URL + '/updatepassword', password);
     },
-    updateUser: (user) => {
-        return AxiosClient.post(USER_URL + '/update_user', user);
+    updateUser: (user, checkUpdate) => {
+        return AxiosClient.post(USER_URL + '/update_user', { inforUser: user, checkUpdate: checkUpdate });
     }
 
 }
