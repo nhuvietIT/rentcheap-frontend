@@ -1,7 +1,7 @@
 <template>
   <div>
     <section id="newsletter">
-      <div id="gradient"></div>
+      <div id="gradient">tesst</div>
       <div class="searchbox">
         <input
           type="search"
